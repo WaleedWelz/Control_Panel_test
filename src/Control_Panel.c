@@ -41,86 +41,86 @@ void Control_Panelvoid_Init(void)
 
 	/* Initialize PORTA as INPUT PULLDOWN
 	 *   pins */
-	for(u8 i=1 ; i<=7;i++)
+	for(u8 i=0 ; i<=7;i++)
 	{
+		if(i==3)
+		{
 
-		MGPIO_voidSetPinDirection(PORTA,i,INPUT_PULLUP_DOWN);
+		}
+		else
+		{
+			MGPIO_voidSetPinDirection(PORTB,i,INPUT_PULLUP_DOWN);
+		}
+
 	}
 
-	for(u8 i=1;i<=7;i++)
+	for(u8 i=0;i<=7;i++)
 	{
-		MGPIO_voidSetPinValue(PORTA,i,LOW);
+		if(i==3)
+		{
+
+		}
+		else
+		{
+			MGPIO_voidSetPinValue(PORTB,i,LOW);
+		}
 	}
 
 
 
 
 
-	MGPIO_voidSetPinDirection(PORTA,PIN12,OUTPUT_10MHZ_PUSHPULL); // EXPOSURE+
-
-	MGPIO_voidSetPinDirection(PORTA,PIN0,INPUT_PULLUP_DOWN); // First Echo LED
+	MGPIO_voidSetPinDirection(PORTA,PIN5,INPUT_PULLUP_DOWN); //NFOV
 	MGPIO_voidSetPinDirection(PORTA,PIN8,INPUT_PULLUP_DOWN); // Contrast+
 	MGPIO_voidSetPinDirection(PORTA,PIN11,INPUT_PULLUP_DOWN); // BRIGHT+
+	MGPIO_voidSetPinDirection(PORTA,PIN12,INPUT_PULLUP_DOWN); // EXPOSURE+
 	MGPIO_voidSetPinDirection(PORTA,PIN15,INPUT_PULLUP_DOWN); // FULL SCREEN
 
-	MGPIO_voidSetPinValue(PORTA,PIN0,LOW);
+
+	MGPIO_voidSetPinValue(PORTA,PIN5,LOW);
 	MGPIO_voidSetPinValue(PORTA,PIN8,LOW);
 	MGPIO_voidSetPinValue(PORTA,PIN11,LOW);
+	MGPIO_voidSetPinValue(PORTA,PIN12,LOW);
 	MGPIO_voidSetPinValue(PORTA,PIN15,LOW);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN3,OUTPUT_10MHZ_PUSHPULL); // SABOT LED
+	MGPIO_voidSetPinDirection(PORTB,PIN3,OUTPUT_10MHZ_PUSHPULL); // High Expo. LED
 	MGPIO_voidSetPinDirection(PORTB,PIN8,OUTPUT_10MHZ_PUSHPULL); // Last Echo LED
-	MGPIO_voidSetPinDirection(PORTB,PIN9,OUTPUT_10MHZ_PUSHPULL); // Last Echo LED
+	MGPIO_voidSetPinDirection(PORTB,PIN9,OUTPUT_10MHZ_PUSHPULL); // Coaxial Gun LED
 
 
-	MGPIO_voidSetPinDirection(PORTC,PIN13,OUTPUT_10MHZ_PUSHPULL); // HEAT LED
-	MGPIO_voidSetPinDirection(PORTC,PIN14,OUTPUT_10MHZ_PUSHPULL); // HEP LED
-	MGPIO_voidSetPinDirection(PORTC,PIN15,OUTPUT_10MHZ_PUSHPULL); // HIGH EXPO. LED
+	MGPIO_voidSetPinDirection(PORTC,PIN13,OUTPUT_10MHZ_PUSHPULL); // HEP LED
+	MGPIO_voidSetPinDirection(PORTC,PIN14,OUTPUT_10MHZ_PUSHPULL); // SABOT LED
+	MGPIO_voidSetPinDirection(PORTC,PIN15,OUTPUT_10MHZ_PUSHPULL); // HEAT LED
 
 
-	/* Initialize PORTB as OUTPUT PUSHPULL
-	 *   pins */
+	/*PORTB*/
 
-	MGPIO_voidSetPinDirection(PORTB,PIN0,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinDirection(PORTB,PIN1,INPUT_PULLUP_DOWN);
-
-	MGPIO_voidSetPinValue(PORTB,PIN0,LOW);
-	MGPIO_voidSetPinValue(PORTB,PIN1,LOW);
-
-
-	MGPIO_voidSetPinDirection(PORTB,PIN4,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN4,LOW);
-
-	MGPIO_voidSetPinDirection(PORTB,PIN5,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN5,LOW);
-
-	MGPIO_voidSetPinDirection(PORTB,PIN6,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN6,LOW);
-
-	MGPIO_voidSetPinDirection(PORTB,PIN7,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN7,LOW);
-
-	MGPIO_voidSetPinDirection(PORTB,PIN7,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN7,LOW);
-
-	MGPIO_voidSetPinDirection(PORTB,PIN10,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN10,LOW);
-
-	MGPIO_voidSetPinDirection(PORTB,PIN11,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinDirection(PORTB,PIN11,INPUT_PULLUP_DOWN); //Field Range
 	MGPIO_voidSetPinValue(PORTB,PIN11,LOW);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN12,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinDirection(PORTB,PIN12,INPUT_PULLUP_DOWN); //Lamp test
 	MGPIO_voidSetPinValue(PORTB,PIN12,LOW);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN13,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinDirection(PORTB,PIN13,INPUT_PULLUP_DOWN); //Color
 	MGPIO_voidSetPinValue(PORTB,PIN13,LOW);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN14,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinDirection(PORTB,PIN14,INPUT_PULLUP_DOWN); //Focus-
 	MGPIO_voidSetPinValue(PORTB,PIN14,LOW);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN15,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinDirection(PORTB,PIN15,INPUT_PULLUP_DOWN); //Focus+
 	MGPIO_voidSetPinValue(PORTB,PIN15,LOW);
 
+
+
+
+	MGPIO_voidSetPinDirection(PORTB,PIN10,OUTPUT_10MHZ_PUSHPULL); //3X LED
+
+
+
+	MGPIO_voidSetPinDirection(PORTA,PIN7,OUTPUT_10MHZ_PUSHPULL); //First Echo LED
+	MGPIO_voidSetPinDirection(PORTA,PIN6,OUTPUT_10MHZ_PUSHPULL); //Last Echo LED
+	MGPIO_voidSetPinDirection(PORTA,PIN1,OUTPUT_10MHZ_PUSHPULL); //16X LED
+	MGPIO_voidSetPinDirection(PORTA,PIN0,OUTPUT_10MHZ_PUSHPULL); //8X LED
 
 
 	/*for(u8 i=6;i<8;i++)
@@ -146,13 +146,13 @@ void Control_Panelvoid_Message_For_LED(u8 Copy_u8Message)
 	switch(Copy_u8Message)
 	{
 	case FIRST_ECHO:
-		MGPIO_voidSetPinValue(PORTA,PIN12,HIGH);
-		MGPIO_voidSetPinValue(PORTB,PIN8,LOW);
+		MGPIO_voidSetPinValue(PORTA,PIN7,HIGH);
+		MGPIO_voidSetPinValue(PORTA,PIN6,LOW);
 		break;
 
 	case LAST_ECHO:
-		MGPIO_voidSetPinValue(PORTA,PIN12,LOW);
-		MGPIO_voidSetPinValue(PORTB,PIN8,HIGH);break;
+		MGPIO_voidSetPinValue(PORTA,PIN7,LOW);
+		MGPIO_voidSetPinValue(PORTA,PIN6,HIGH);break;
 
 	case ECHO_OFF:
 		MGPIO_voidSetPinValue(PORTA,PIN12,LOW);
