@@ -40,32 +40,11 @@ void Control_Panelvoid_Init(void)
 
 	/* Initialize PORTA as INPUT PULLDOWN
 	 *   pins */
-	for(u8 i=1 ; i<=7;i++)
-	{
 
-		if(i==2 || i==3)
-		{
+	MGPIO_voidSetPinDirection(PORTA,4,INPUT_PULLUP_DOWN);
 
-		}
-		else
-		{
-			MGPIO_voidSetPinDirection(PORTA,i,INPUT_PULLUP_DOWN);
-		}
 
-	}
 
-	for(u8 i=1;i<=7;i++)
-	{
-		if(i==2 || i==3)
-		{
-
-		}
-		else
-		{
-			MGPIO_voidSetPinValue(PORTA,i,LOW);
-
-		}
-	}
 
 
 
@@ -431,24 +410,24 @@ void Control_Panel_voidStartUpLeds(void)
 {
 
 	u8 Data=ShiftRegister_u8GetData();
-	for(u8 i=1;i<6;i++)
+	for(u8 i=4;i<9;i++)
 	{
 		if(GET_BIT(Data,i)==1)
 		{
 			switch(i)
 			{
-			case 1: Control_Panelvoid_Message_For_LED(HIGH_EXP);Current_LED_Bullet=High_Exp;Global_u8BulletState=HIGH_EXPO_FLAG;break;
-			case 2: Control_Panelvoid_Message_For_LED(HEAT); Current_LED_Bullet=Heat;Global_u8BulletState=HEAT_FLAG; break;
-			case 3:	Control_Panelvoid_Message_For_LED(SABOT);Current_LED_Bullet=Sabot;Global_u8BulletState=SABOT_FLAG;break;
-			case 4: Control_Panelvoid_Message_For_LED(HEP);Current_LED_Bullet=Hep;Global_u8Bullets_Flag=0;Global_u8BulletState=HEP_FLAG;break;
-			case 5: Control_Panelvoid_Message_For_LED(Coaxial_GUN);Current_LED_Bullet=Coaxial;Global_u8BulletState=COAXIAL_GUN_FLAG;break;
+			case 8: Control_Panelvoid_Message_For_LED(Coaxial_GUN);Current_LED_Bullet=Coaxial;Global_u8BulletState=COAXIAL_GUN_FLAG;break;
+			case 7: Control_Panelvoid_Message_For_LED(HEP);Current_LED_Bullet=Hep;Global_u8Bullets_Flag=0;Global_u8BulletState=HEP_FLAG;break;
+			case 6:	Control_Panelvoid_Message_For_LED(SABOT);Current_LED_Bullet=Sabot;Global_u8BulletState=SABOT_FLAG;break;
+			case 5: Control_Panelvoid_Message_For_LED(HEAT); Current_LED_Bullet=Heat;Global_u8BulletState=HEAT_FLAG; break;
+			case 4: Control_Panelvoid_Message_For_LED(HIGH_EXP);Current_LED_Bullet=High_Exp;Global_u8BulletState=HIGH_EXPO_FLAG;break;
 			}
 
 		}
 	}
 
-
-	/* Loop to Check the last status of Switches before startup */
+/*
+	 Loop to Check the last status of Switches before startup
 	for (u8 i = 5; i <=7; i++)
 	{
 		if (MGPIO_u8GetPinValue(PORTA, i) == 1) //Check if the Switch is selected
@@ -474,7 +453,7 @@ void Control_Panel_voidStartUpLeds(void)
 		Global_u8FVState=WFV_FLAG;
 		USART1_VoidWriteString((u8 *)"*MFOV#"); Global_u8FV_Status_Flag=1;
 	}
-/*	if(MGPIO_u8GetPinValue(PORTA,PIN11) == 1)
+	if(MGPIO_u8GetPinValue(PORTA,PIN11) == 1)
 	{
 		USART1_VoidWriteString((u8 *)"*Thermal#");Global_u8Day_Thermal_Flag=0;Global_u8DTStateFlag=0;
 	}
@@ -485,38 +464,42 @@ void Control_Panel_voidStartUpLeds(void)
 	if(MGPIO_u8GetPinValue(PORTA, PIN6) == 0 && MGPIO_u8GetPinValue(PORTA, 7) == 0) // If PIN6 and PIN7 are not pressed Echo off will be selected
 	{
 		USART1_VoidWriteString((u8 *)"*First Echo#");	Control_Panelvoid_Message_For_LED(FIRST_ECHO);Global_u8EchoState=LECHO_FLAG;	Current_LED_Echo=First_Echo;Global_u8Echo_Status_Flag=1;
-	}*/
+	}
 	if(MGPIO_u8GetPinValue(PORTB, PIN0) == 1)
 	{
 		Global_u8FVState=MFV_FLAG;
 		Global_u8FV_Status_Flag=1;
 		USART1_VoidWriteString((u8 *)"*NFOW#\n");
 
-	}
+	}*/
 }
 
-u8   ShiftRegister_u8GetData(void)
+
+u8 ShiftRegister_u8GetData(void)
 {
-	u8 Data=0;
+    u8 Data = 0;
 
-	MGPIO_voidSetPinValue(PORTA,SH_LD_PIN,LOW);
-	delay_voidXms(5);
-	MGPIO_voidSetPinValue(PORTA,SH_LD_PIN,HIGH);
+    // Load parallel data into the shift register
+    MGPIO_voidSetPinValue(PORTA, SH_LD_PIN, LOW);
+    delay_voidXms(1);  // Use minimal required delay
+    MGPIO_voidSetPinValue(PORTA, SH_LD_PIN, HIGH);
 
-	for(u8 i=0;i<8;i++)
-	{
-		MGPIO_voidSetPinValue(PORTA,CLK_PIN,HIGH);
+    // Read serial data
+    for (u8 i = 0; i < 8; i++)
+    {
+        MGPIO_voidSetPinValue(PORTA, CLK_PIN, LOW);  // Ensure stable clock
+        delay_voidXms(10);
+        MGPIO_voidSetPinValue(PORTA, CLK_PIN, HIGH); // Pulse clock
 
-		Data|=(MGPIO_u8GetPinValue(PORTA,QH_PIN)<<(7-i));
+        Data <<= 1;
+        Data |= MGPIO_u8GetPinValue(PORTA, QH_PIN);
+    }
 
+    MGPIO_voidSetPinValue(PORTA, CLK_PIN, LOW); // Ensure clock is LOW after operation
 
-		MGPIO_voidSetPinValue(PORTA,CLK_PIN,LOW);
-	}
-
-
-	return Data;
-
+    return Data;
 }
+
 
 void DataEntry_VoidWriteStringAndNumbers(u8 *Copy_u8StringToBeSent,u32 Copy_u32RealNumber)
 {

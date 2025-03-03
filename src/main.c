@@ -91,10 +91,10 @@ void main()
 	MEXTINT3_VidSetCallBack(&INT_HEP_COAXIAL_GUN);
 	MEXTINT4_VidSetCallBack(&INT_HIGH_EXPO);
 	 */
-	MEXTINT0_VidSetCallBack(&INT_NFOV);
+	/*MEXTINT0_VidSetCallBack(&INT_NFOV);
 	MEXTINT9_5_VidSetCallBack(&INT_First_Echo_LAST_ECHO);
 	MEXTINT15_10_VidSetCallBack(&INT_DAY_THERMAL);
-
+	 */
 
 	//Loop to check the startup message
 	for(u8 i=0;Global_u8StartCommand[i]!='\0';i++)
@@ -118,8 +118,7 @@ void main()
 		{
 
 
-
-			executeActions(); // Check which BUTTON is pressed and handle the Lamp test button states,checks Echo_OFF and NFOV states.
+			/*executeActions(); // Check which BUTTON is pressed and handle the Lamp test button states,checks Echo_OFF and NFOV states.
 
 			if( MGPIO_u8GetPinValue(PORTA,PIN5)==1 && Global_u8WideFlag == 0) {
 				if(Global_u8Day_Thermal_Flag==0)
@@ -152,10 +151,12 @@ void main()
 
 				Global_u8WideFlag=0;
 			}
+			 */
+
 
 			Global_u8SwitchsData=ShiftRegister_u8GetData();
 
-			if(GET_BIT(Global_u8SwitchsData,1)==1  && GET_BIT(Global_u8SwitchsData,2)==0  && GET_BIT(Global_u8SwitchsData,3)==0  && GET_BIT(Global_u8SwitchsData,4)==0  && GET_BIT(Global_u8SwitchsData,5)==0 && Global_u8BulletState==HIGH_EXPO_FLAG)
+			if(GET_BIT(Global_u8SwitchsData,4)==1  && GET_BIT(Global_u8SwitchsData,5)==0  && GET_BIT(Global_u8SwitchsData,6)==0  && GET_BIT(Global_u8SwitchsData,7)==0  && GET_BIT(Global_u8SwitchsData,8)==0 && Global_u8BulletState==HIGH_EXPO_FLAG)
 			{
 				Global_u8BulletState=HEAT_FLAG;
 				USART1_VoidWriteString((u8 *)"*High_Exp.#\n");
@@ -163,7 +164,7 @@ void main()
 				Control_Panelvoid_Message_For_LED(HIGH_EXP);
 				Global_u8Bullets_Flag=0;
 			}
-			if(GET_BIT(Global_u8SwitchsData,1)==0  && GET_BIT(Global_u8SwitchsData,2)==1  && GET_BIT(Global_u8SwitchsData,3)==0  && GET_BIT(Global_u8SwitchsData,4)==0  && GET_BIT(Global_u8SwitchsData,5)==0 && Global_u8BulletState==HEAT_FLAG )
+			if(GET_BIT(Global_u8SwitchsData,4)==0  && GET_BIT(Global_u8SwitchsData,5)==1  && GET_BIT(Global_u8SwitchsData,6)==0  && GET_BIT(Global_u8SwitchsData,7)==0 && GET_BIT(Global_u8SwitchsData,8)==0 && Global_u8BulletState==HEAT_FLAG )
 			{
 				Global_u8BulletState=SABOT_FLAG;
 				USART1_VoidWriteString((u8 *)"*Heat#\n");
@@ -172,7 +173,7 @@ void main()
 				Global_u8Bullets_Flag=0;
 				cnt=0;
 			}
-			if(GET_BIT(Global_u8SwitchsData,1)==0  && GET_BIT(Global_u8SwitchsData,2)==0  && GET_BIT(Global_u8SwitchsData,3)==1  && GET_BIT(Global_u8SwitchsData,4)==0  && GET_BIT(Global_u8SwitchsData,5)==0 && Global_u8BulletState==SABOT_FLAG)
+			if(GET_BIT(Global_u8SwitchsData,4)==0  && GET_BIT(Global_u8SwitchsData,5)==0  && GET_BIT(Global_u8SwitchsData,6)==1  && GET_BIT(Global_u8SwitchsData,7)==0  && GET_BIT(Global_u8SwitchsData,8)==0 && Global_u8BulletState==SABOT_FLAG)
 			{
 				Global_u8BulletState=HEAT_FLAG;
 				USART1_VoidWriteString((u8 *)"*Sabot#\n");
@@ -180,7 +181,7 @@ void main()
 				Control_Panelvoid_Message_For_LED(SABOT);
 				Global_u8Bullets_Flag=0;
 			}
-			if(GET_BIT(Global_u8SwitchsData,1)==0  && GET_BIT(Global_u8SwitchsData,2)==0  && GET_BIT(Global_u8SwitchsData,3)==0  && GET_BIT(Global_u8SwitchsData,4)==1  && GET_BIT(Global_u8SwitchsData,5)==0 && Global_u8BulletState==HEP_FLAG)
+			if(GET_BIT(Global_u8SwitchsData,4)==0  && GET_BIT(Global_u8SwitchsData,5)==0  && GET_BIT(Global_u8SwitchsData,6)==0  && GET_BIT(Global_u8SwitchsData,7)==1  && GET_BIT(Global_u8SwitchsData,8)==0 && Global_u8BulletState==HEP_FLAG)
 			{
 				Global_u8BulletState=COAXIAL_GUN_FLAG;
 				USART1_VoidWriteString((u8 *)"*HEP#");
@@ -188,7 +189,7 @@ void main()
 				Current_LED_Bullet=Hep;
 				Control_Panelvoid_Message_For_LED(HEP);
 			}
-			if(GET_BIT(Global_u8SwitchsData,1)==0  && GET_BIT(Global_u8SwitchsData,2)==0  && GET_BIT(Global_u8SwitchsData,3)==0  && GET_BIT(Global_u8SwitchsData,4)==0  && GET_BIT(Global_u8SwitchsData,5)==1 && Global_u8BulletState==COAXIAL_GUN_FLAG)
+			if(GET_BIT(Global_u8SwitchsData,4)==0  && GET_BIT(Global_u8SwitchsData,5)==0  && GET_BIT(Global_u8SwitchsData,6)==0  && GET_BIT(Global_u8SwitchsData,7)==0  && GET_BIT(Global_u8SwitchsData,8)==1 && Global_u8BulletState==COAXIAL_GUN_FLAG)
 			{
 				Global_u8BulletState=HEP_FLAG;
 				Global_u8Bullets_Flag=1;
@@ -196,10 +197,6 @@ void main()
 				Current_LED_Bullet=Coaxial;
 				Control_Panelvoid_Message_For_LED(Coaxial_GUN);
 			}
-
-
-			//MGPIO_voidSetPinValue(PORTB,PIN9,HIGH);   //Coaxial gun
-
 
 		}
 	}
@@ -210,6 +207,7 @@ void main()
 	}
 }
 
+/*
 
 void INT_DAY_THERMAL(void){
 
@@ -304,6 +302,7 @@ void INT_First_Echo_LAST_ECHO(void)
 	MEXTI_voidEnable(PORTA,PIN7,RISING_EDGE);
 
 }
+ */
 
 /*
 
