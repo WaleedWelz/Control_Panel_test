@@ -158,7 +158,7 @@ void Control_Panel_voidClr_Flags(void);
 void Control_Panel_voidStartUpLeds(void);
 void Control_Panelvoid_Message_For_LED(u8 Copy_u8Message);
 void LED_voidLampTest(u8 Copy_u8status);
-u8   ShiftRegister_u8GetData(void);
+u16  ShiftRegister_u16GetData(void);
 void DataEntry_VoidWriteStringAndNumbers(u8 *Copy_u8StringToBeSent,u32 Copy_u32RealNumber);
 
 

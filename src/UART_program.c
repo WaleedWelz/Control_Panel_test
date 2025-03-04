@@ -272,3 +272,12 @@ void printBinary(u8 num) {
     }
     USART1_VoidWriteCharacter('\n'); // Add a newline for better formatting
 }
+
+void printBinary16(u16 num) {
+    for (s8 i = 15; i >= 0; i--) { // Loop from the most significant bit (MSB) to the least significant bit (LSB)
+        u8 bit = (num >> i) & 1;  // Extract each bit
+        USART1_VoidWriteCharacter(bit ? '1' : '0'); // Send the bit as a character using USART
+    }
+    USART1_VoidWriteCharacter('\n'); // Add a newline for better formatting
+}
+
