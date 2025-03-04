@@ -44,6 +44,10 @@ void Control_Panelvoid_Init(void)
 	MGPIO_voidSetPinDirection(PORTA,4,INPUT_PULLUP_DOWN);
 
 
+	MGPIO_voidSetPinDirection(PORTA,6,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinDirection(PORTA,7,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinValue(PORTA,PIN6,LOW);
+	MGPIO_voidSetPinValue(PORTA,PIN7,LOW);
 
 
 
@@ -258,8 +262,8 @@ void Control_Panel_voidStartUpLeds(void)
 			switch (i)
 			{
 			case 5: USART1_VoidWriteString((u8 *)"*WFOV#"); Global_u8FV_Status_Flag=1;Global_u8FVState=MFV_FLAG; break;
-		    case 6: USART1_VoidWriteString((u8 *)"*Last Echo#");Control_Panelvoid_Message_For_LED(LAST_ECHO);Global_u8EchoState=FECHO_FLAG;	Current_LED_Echo=Last_Echo;Global_u8Echo_Status_Flag=1;break;
-			case 7:	USART1_VoidWriteString((u8 *)"*Echo Off#");Control_Panelvoid_Message_For_LED(ECHO_OFF);Global_u8EchoState=FECHO_FLAG;Current_LED_Echo=Off;break;
+		    case 7: USART1_VoidWriteString((u8 *)"*Last Echo#");Control_Panelvoid_Message_For_LED(LAST_ECHO);Global_u8EchoState=FECHO_FLAG;	Current_LED_Echo=Last_Echo;Global_u8Echo_Status_Flag=1;break;
+			case 6:	USART1_VoidWriteString((u8 *)"*Echo Off#");Control_Panelvoid_Message_For_LED(ECHO_OFF);Global_u8EchoState=FECHO_FLAG;Current_LED_Echo=Off;break;
 
 			default:break;
 			}
