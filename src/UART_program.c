@@ -153,13 +153,13 @@ u8 * USART1_u8ReadString () {
 /* 13 is the ASCII code for new line */
 
 		while( ( last_entered_data = USART1_u8ReadCharacter() ) != 13 ){
-
 			String[ factor ] = last_entered_data ;
-			USART1_VoidWriteCharacter(last_entered_data);
 			factor++;
 		}
 
 		String[factor] = '\0';
+
+		//USART1_VoidWriteCharacter(',');
 
 		return ( String );
 

@@ -73,6 +73,9 @@
 #define SABOT              5
 #define HEAT               6
 #define HIGH_EXP           7
+#define NFOV			   8
+#define MFOV			   9
+#define WFOV               10
 
 #define ON                 0
 #define OFF				   1
@@ -87,7 +90,10 @@ enum Status
 	Hep,
 	Sabot,
 	Heat,
-	High_Exp
+	High_Exp,
+	Nfov,
+	Mfov,
+	Wfov
 
 };
 
