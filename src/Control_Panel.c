@@ -49,9 +49,6 @@ void Control_Panelvoid_Init(void)
 	MGPIO_voidSetPinValue(PORTA,PIN6,LOW);
 	MGPIO_voidSetPinValue(PORTA,PIN7,LOW);
 
-
-
-
 	MGPIO_voidSetPinDirection(PORTA,PIN2,OUTPUT_10MHZ_PUSHPULL);
 	MGPIO_voidSetPinDirection(PORTA,PIN3,OUTPUT_10MHZ_PUSHPULL);
 
@@ -286,6 +283,15 @@ void Control_Panel_voidStartUpLeds(void)
 		}
 	}
 
+	if(MGPIO_u8GetPinValue(PORTA,PIN15) == 1)
+	{
+		USART1_VoidWriteString((u8 *)"Thermal,");Global_u8Day_Thermal_Flag=0;Global_u8DTStateFlag=0;
+	}
+	if(MGPIO_u8GetPinValue(PORTA, PIN15) == 0) // if the switch is open it will read Thermal as its single position switch
+	{
+		USART1_VoidWriteString((u8 *)"Day,");Global_u8Day_Thermal_Flag=1;Global_u8DTStateFlag=1;
+	}
+
 
 	//Loop to Check the last status of Switches before startup
 	for (u8 i = 5; i <=7; i++)
@@ -309,14 +315,7 @@ void Control_Panel_voidStartUpLeds(void)
 	//		Control_Panelvoid_Message_For_LED(Coaxial_GUN);Current_LED_Bullet=Coaxial;Global_u8BulletState=COAXIAL_GUN_FLAG;
 	//	}
 
-	if(MGPIO_u8GetPinValue(PORTA,PIN15) == 1)
-	{
-		USART1_VoidWriteString((u8 *)"Thermal,");Global_u8Day_Thermal_Flag=0;Global_u8DTStateFlag=0;
-	}
-	if(MGPIO_u8GetPinValue(PORTA, PIN15) == 0) // if the switch is open it will read Thermal as its single position switch
-	{
-		USART1_VoidWriteString((u8 *)"Day,");Global_u8Day_Thermal_Flag=1;Global_u8DTStateFlag=1;
-	}
+
 	if(MGPIO_u8GetPinValue(PORTB,0) == 0 && MGPIO_u8GetPinValue(PORTA,5) == 0)
 	{
 		Global_u8FVState=WFV_FLAG;
@@ -328,10 +327,17 @@ void Control_Panel_voidStartUpLeds(void)
 	}
 	if(MGPIO_u8GetPinValue(PORTB, PIN0) == 1)
 	{
-		Global_u8FVState=MFV_FLAG;
-		Global_u8FV_Status_Flag=1;
-		USART1_VoidWriteString((u8 *)"NFOW,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_Bullet=Nfov;
-
+		if(Global_u8Day_Thermal_Flag==0)
+		{
+			Global_u8FVState=MFV_FLAG;
+			Global_u8FV_Status_Flag=1;
+			USART1_VoidWriteString((u8 *)"NFOW,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_Bullet=Nfov;
+		}
+		else if(Global_u8Day_Thermal_Flag==1)
+		{
+			Global_u8FVState=MFV_FLAG;
+			Global_u8FV_Status_Flag=1;
+		}
 	}
 }
 
