@@ -291,24 +291,6 @@ void Control_Panel_voidStartUpLeds(void)
 	{
 		USART1_VoidWriteString((u8 *)"Day,");Global_u8Day_Thermal_Flag=1;Global_u8DTStateFlag=1;
 	}
-
-
-	//Loop to Check the last status of Switches before startup
-	for (u8 i = 5; i <=7; i++)
-	{
-		if (MGPIO_u8GetPinValue(PORTA, i) == 1) //Check if the Switch is selected
-		{
-			switch (i)
-			{
-			case 5: USART1_VoidWriteString((u8 *)"WFOV,");Control_Panelvoid_Message_For_LED(WFOV); Global_u8FV_Status_Flag=1;Global_u8FVState=MFV_FLAG;Current_LED_Bullet=Wfov; break;
-			case 7: USART1_VoidWriteString((u8 *)"Last Echo,");Control_Panelvoid_Message_For_LED(LAST_ECHO);Global_u8EchoState=FECHO_FLAG;	Current_LED_Echo=Last_Echo;Global_u8Echo_Status_Flag=1;break;
-			case 6:	USART1_VoidWriteString((u8 *)"Echo Off,");Control_Panelvoid_Message_For_LED(ECHO_OFF);Global_u8EchoState=FECHO_FLAG;Current_LED_Echo=Off;break;
-
-			default:break;
-			}
-		}
-	}
-
 	//	if(MGPIO_u8GetPinValue(PORTA,PIN1)==0 && MGPIO_u8GetPinValue(PORTA,PIN2)==0 && MGPIO_u8GetPinValue(PORTA,PIN3)==0 && MGPIO_u8GetPinValue(PORTA,PIN4)==0)
 	//	{
 	//		Global_u8Bullets_Flag=1;
@@ -321,23 +303,38 @@ void Control_Panel_voidStartUpLeds(void)
 		Global_u8FVState=WFV_FLAG;
 		USART1_VoidWriteString((u8 *)"MFOV,");Control_Panelvoid_Message_For_LED(MFOV); Global_u8FV_Status_Flag=1;Current_LED_Bullet=Mfov;
 	}
-	if(MGPIO_u8GetPinValue(PORTA, PIN6) == 0 && MGPIO_u8GetPinValue(PORTA, 7) == 0) // If PIN6 and PIN7 are not pressed Echo off will be selected
-	{
-		USART1_VoidWriteString((u8 *)"First Echo,");Control_Panelvoid_Message_For_LED(FIRST_ECHO);Global_u8EchoState=LECHO_FLAG;	Current_LED_Echo=First_Echo;Global_u8Echo_Status_Flag=1;
-	}
 	if(MGPIO_u8GetPinValue(PORTB, PIN0) == 1)
 	{
 		if(Global_u8Day_Thermal_Flag==0)
 		{
 			Global_u8FVState=MFV_FLAG;
 			Global_u8FV_Status_Flag=1;
-			USART1_VoidWriteString((u8 *)"NFOW,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_Bullet=Nfov;
+			USART1_VoidWriteString((u8 *)"NFOV,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_Bullet=Nfov;
 		}
 		else if(Global_u8Day_Thermal_Flag==1)
 		{
 			Global_u8FVState=MFV_FLAG;
 			Global_u8FV_Status_Flag=1;
 		}
+	}
+	//Loop to Check the last status of Switches before startup
+	for (u8 i = 5; i <=7; i++)
+	{
+		if (MGPIO_u8GetPinValue(PORTA, i) == 1) //Check if the Switch is selected
+		{
+			switch (i)
+			{
+			case 5: USART1_VoidWriteString((u8 *)"WFOV,");Control_Panelvoid_Message_For_LED(WFOV); Global_u8FV_Status_Flag=1;Global_u8FVState=MFV_FLAG;Current_LED_Bullet=Wfov; break;
+			case 7: USART1_VoidWriteString((u8 *)"Last Echo,");Control_Panelvoid_Message_For_LED(LAST_ECHO);Global_u8EchoState=FECHO_FLAG;	Current_LED_Echo=Last_Echo;Global_u8Echo_Status_Flag=1;break;
+			case 6:	USART1_VoidWriteString((u8 *)"Echo Off,");Control_Panelvoid_Message_For_LED(ECHO_OFF);Global_u8EchoState=FECHO_FLAG;Current_LED_Echo=Off;Global_u8Echo_Status_Flag=1;break;
+
+			default:break;
+			}
+		}
+	}
+	if(MGPIO_u8GetPinValue(PORTA, PIN6) == 0 && MGPIO_u8GetPinValue(PORTA, 7) == 0) // If PIN6 and PIN7 are not pressed Echo off will be selected
+	{
+		USART1_VoidWriteString((u8 *)"First Echo,");Control_Panelvoid_Message_For_LED(FIRST_ECHO);Global_u8EchoState=LECHO_FLAG;	Current_LED_Echo=First_Echo;Global_u8Echo_Status_Flag=1;
 	}
 }
 
