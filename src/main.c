@@ -41,6 +41,8 @@ u8 Coaxial_FlagIndicator=0;
 u8 cnt=0;
 u16 Global_u16SwitchsData=0;
 u8 Global_u8PressedSwitch=0;
+u8 Global_u8SentenceIsTaken=0;
+u8 Global_u8StartThePanel=0;
 
 enum Status Current_LED_Echo; // Enum Object to Store the Echo status used in Lightening the corresponding LED at startup
 enum Status Current_LED_Bullet;// Enum Object to Store the Bullet status used in Lightening the corresponding LED at startup
@@ -60,7 +62,7 @@ void main()
 	USART_Init(); // Initializing UART
 
 
-	Global_u8StartCommand=USART1_u8ReadString(); // Pointing to the received string
+
 
 
 
@@ -96,27 +98,47 @@ void main()
 	MEXTINT15_10_VidSetCallBack(&INT_DAY_THERMAL);
 
 
-	//Loop to check the startup message
-	for(u8 i=0;Global_u8StartCommand[i]!='\0';i++)
+
+	while(1)
 	{
-		if(Global_u8StartCommand[i]==arr_start[i])
+		Global_u8StartCommand=USART1_u8ReadString_NonBlocking(); // Pointing to the received string
+
+		if (Global_u8StartCommand[0] != NULL) // Ensure a new string is received
 		{
-			Global_u8StartCounter++;
+			Global_u8StartCounter = 0; // Reset counter before checking the new input
+
+
+			//Loop to check the startup message
+			for(u8 i=0;Global_u8StartCommand[i]!='\0';i++)
+			{
+				if(Global_u8StartCommand[i]==arr_start[i])
+				{
+					Global_u8StartCounter++;
+				}
+				else
+				{
+					Global_u8StartCounter=0;
+				}
+			}
+
+			if(Global_u8StartCounter==STARTUP_MESSAGE_LETTERS_NUMBER)
+			{
+
+
+				USART1_VoidWriteString((u8*)"*Start,");
+
+				Control_Panel_voidStartUpLeds(); // Know which Switch position was selected and Light the corresponding LED
+
+				Global_u8StartThePanel=1;
+			}
+			else if(Global_u8StartCounter!=STARTUP_MESSAGE_LETTERS_NUMBER)
+			{
+				USART1_VoidWriteString((u8*)"Wrong Input..");
+				Global_u8StartThePanel=0;
+			}
 		}
-		else
-		{
-			Global_u8StartCounter=0;
-		}
-	}
 
-
-	if(Global_u8StartCounter==STARTUP_MESSAGE_LETTERS_NUMBER)
-	{
-		USART1_VoidWriteString((u8*)"*Start,");
-
-		Control_Panel_voidStartUpLeds(); // Know which Switch position was selected and Light the corresponding LED
-
-		while(1)
+		if(Global_u8StartThePanel==1)
 		{
 
 			if(MGPIO_u8GetPinValue(PORTB,PIN14)==1)
@@ -257,15 +279,15 @@ void main()
 
 			if( MGPIO_u8GetPinValue(PORTA,PIN5)==1 && Global_u8WideFlag == 0) {
 
-					if(Global_u8FVState==WFV_FLAG)
-					{
-						Global_u8FVState=MFV_FLAG;
-						Global_u8WideFlag=1;
-						Global_u8FV_Status_Flag=1;
-						USART1_VoidWriteString((u8 *)"*WFOV#");
-						Control_Panelvoid_Message_For_LED(WFOV);
-						Current_LED_Echo=Wfov;
-					}
+				if(Global_u8FVState==WFV_FLAG)
+				{
+					Global_u8FVState=MFV_FLAG;
+					Global_u8WideFlag=1;
+					Global_u8FV_Status_Flag=1;
+					USART1_VoidWriteString((u8 *)"*WFOV#");
+					Control_Panelvoid_Message_For_LED(WFOV);
+					Current_LED_Echo=Wfov;
+				}
 
 			}
 			else if ( MGPIO_u8GetPinValue(PORTA,PIN5)==0 && Global_u8WideFlag == 1 ) {
@@ -331,12 +353,10 @@ void main()
 				Control_Panelvoid_Message_For_LED(Coaxial_GUN);
 			}
 		}
+
 	}
 
-	else
-	{
-		USART1_VoidWriteString((u8*)"Wrong Input..Reset");
-	}
+
 }
 
 
@@ -393,9 +413,6 @@ void INT_NFOV(void)
 
 void INT_First_Echo_LAST_ECHO(void)
 {
-	MEXTI_voidDisable(PIN6);
-	MEXTI_voidDisable(PIN7);
-
 	u8 Local_u8Pin6_value=MGPIO_u8GetPinValue(PORTA,PIN6);
 	u8 Local_u8Pin7_value=MGPIO_u8GetPinValue(PORTA,PIN7);
 
