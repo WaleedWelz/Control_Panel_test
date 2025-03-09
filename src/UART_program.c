@@ -294,7 +294,7 @@ u8 USART1_ReceiveByteNonBlocking(u8 *data)
 
 u8* USART1_u8ReadString_NonBlocking()
 {
-    static u8 receivedString[50]; // Buffer
+    static u8 receivedString[50]={0}; // Buffer
     static u8 i = 0; // Keep track of index across calls
     u8 receivedByte;
 

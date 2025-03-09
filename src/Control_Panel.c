@@ -29,6 +29,7 @@ extern u8 Global_u8FV_Status_Flag;
 extern enum Status Current_LED_Echo;
 extern enum Status Current_LED_Bullet;
 extern u8 Global_u8Bullets_Flag;
+extern u8 Global_u8BulletsOn;
 /*
  * Breif : This Function is Initializing The Control Panel pins.
  * Parameters :  Nothing
@@ -283,6 +284,51 @@ void Control_Panel_voidStartUpLeds(void)
 		}
 	}
 
+	Global_u8BulletsOn=0;
+
+	if(Global_u8BulletState==HIGH_EXPO_FLAG)
+	{
+		Global_u8BulletState=HEAT_FLAG;
+		USART1_VoidWriteString((u8 *)"*High Exp#");
+		Current_LED_Bullet=High_Exp;
+		Control_Panelvoid_Message_For_LED(HIGH_EXP);
+		Global_u8Bullets_Flag=0;
+	}
+	if(Global_u8BulletState==HEAT_FLAG)
+	{
+		Global_u8BulletState=SABOT_FLAG;
+		USART1_VoidWriteString((u8 *)"*Heat#");
+		Current_LED_Bullet=Heat;
+		Control_Panelvoid_Message_For_LED(HEAT);
+		Global_u8Bullets_Flag=0;
+	}
+	if(Global_u8BulletState==SABOT_FLAG)
+	{
+		Global_u8BulletState=HEAT_FLAG;
+		USART1_VoidWriteString((u8 *)"*Sabot#");
+		Current_LED_Bullet=Sabot;
+		Control_Panelvoid_Message_For_LED(SABOT);
+		Global_u8Bullets_Flag=0;
+	}
+	if(Global_u8BulletState==HEP_FLAG)
+	{
+		Global_u8BulletState=COAXIAL_GUN_FLAG;
+		USART1_VoidWriteString((u8 *)"*Sub Caliber#");
+		Global_u8Bullets_Flag=0;
+		Current_LED_Bullet=Hep;
+		Control_Panelvoid_Message_For_LED(HEP);
+	}
+	if(Global_u8BulletState==COAXIAL_GUN_FLAG)
+	{
+		Global_u8BulletState=HEP_FLAG;
+		Global_u8Bullets_Flag=1;
+		USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
+		Current_LED_Bullet=Coaxial;
+		Control_Panelvoid_Message_For_LED(Coaxial_GUN);
+	}
+
+
+
 	if(MGPIO_u8GetPinValue(PORTA,PIN15) == 1)
 	{
 		USART1_VoidWriteString((u8 *)"Thermal,");Global_u8Day_Thermal_Flag=0;Global_u8DTStateFlag=0;
@@ -301,7 +347,7 @@ void Control_Panel_voidStartUpLeds(void)
 	if(MGPIO_u8GetPinValue(PORTB,0) == 0 && MGPIO_u8GetPinValue(PORTA,5) == 0)
 	{
 		Global_u8FVState=WFV_FLAG;
-		USART1_VoidWriteString((u8 *)"MFOV,");Control_Panelvoid_Message_For_LED(MFOV); Global_u8FV_Status_Flag=1;Current_LED_Bullet=Mfov;
+		USART1_VoidWriteString((u8 *)"NFOV,");Control_Panelvoid_Message_For_LED(MFOV); Global_u8FV_Status_Flag=1;Current_LED_Bullet=Mfov;
 	}
 	if(MGPIO_u8GetPinValue(PORTB, PIN0) == 1)
 	{
@@ -309,7 +355,7 @@ void Control_Panel_voidStartUpLeds(void)
 		{
 			Global_u8FVState=MFV_FLAG;
 			Global_u8FV_Status_Flag=1;
-			USART1_VoidWriteString((u8 *)"NFOV,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_Bullet=Nfov;
+			USART1_VoidWriteString((u8 *)"FFOV,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_Bullet=Nfov;
 		}
 		else if(Global_u8Day_Thermal_Flag==1)
 		{
