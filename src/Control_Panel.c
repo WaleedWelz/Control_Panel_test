@@ -30,6 +30,7 @@ extern enum Status Current_LED_Echo;
 extern enum Status Current_LED_Bullet;
 extern u8 Global_u8Bullets_Flag;
 extern u8 Global_u8BulletsOn;
+
 /*
  * Breif : This Function is Initializing The Control Panel pins.
  * Parameters :  Nothing
@@ -217,23 +218,6 @@ void Control_Panelvoid_Message_For_LED(u8 Copy_u8Message)
 	}
 }
 
-
-/*
- * Breif : Based on the array of struct index, it access the message element and send it,and
- * execute the corresponding function.
- * Parameters :Takes the array of struct.
- * return : Nothing
- */
-void executeAction(PinAction action)
-{
-	USART1_VoidWriteString((u8 *)action.message);
-	if (action.action != NULL)
-	{
-		action.action();
-	}
-}
-
-
 void handleLampTest(void){
 	MGPIO_voidSetPinValue(PORTB,PIN3,HIGH);   //Sabot
 	MGPIO_voidSetPinValue(PORTB,PIN9,HIGH);   //Coaxial gun
@@ -283,51 +267,6 @@ void Control_Panel_voidStartUpLeds(void)
 
 		}
 	}
-
-	Global_u8BulletsOn=0;
-
-	if(Global_u8BulletState==HIGH_EXPO_FLAG)
-	{
-		Global_u8BulletState=HEAT_FLAG;
-		USART1_VoidWriteString((u8 *)"*High Exp#");
-		Current_LED_Bullet=High_Exp;
-		Control_Panelvoid_Message_For_LED(HIGH_EXP);
-		Global_u8Bullets_Flag=0;
-	}
-	if(Global_u8BulletState==HEAT_FLAG)
-	{
-		Global_u8BulletState=SABOT_FLAG;
-		USART1_VoidWriteString((u8 *)"*Heat#");
-		Current_LED_Bullet=Heat;
-		Control_Panelvoid_Message_For_LED(HEAT);
-		Global_u8Bullets_Flag=0;
-	}
-	if(Global_u8BulletState==SABOT_FLAG)
-	{
-		Global_u8BulletState=HEAT_FLAG;
-		USART1_VoidWriteString((u8 *)"*Sabot#");
-		Current_LED_Bullet=Sabot;
-		Control_Panelvoid_Message_For_LED(SABOT);
-		Global_u8Bullets_Flag=0;
-	}
-	if(Global_u8BulletState==HEP_FLAG)
-	{
-		Global_u8BulletState=COAXIAL_GUN_FLAG;
-		USART1_VoidWriteString((u8 *)"*Sub Caliber#");
-		Global_u8Bullets_Flag=0;
-		Current_LED_Bullet=Hep;
-		Control_Panelvoid_Message_For_LED(HEP);
-	}
-	if(Global_u8BulletState==COAXIAL_GUN_FLAG)
-	{
-		Global_u8BulletState=HEP_FLAG;
-		Global_u8Bullets_Flag=1;
-		USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
-		Current_LED_Bullet=Coaxial;
-		Control_Panelvoid_Message_For_LED(Coaxial_GUN);
-	}
-
-
 
 	if(MGPIO_u8GetPinValue(PORTA,PIN15) == 1)
 	{
@@ -382,6 +321,53 @@ void Control_Panel_voidStartUpLeds(void)
 	{
 		USART1_VoidWriteString((u8 *)"First Echo,");Control_Panelvoid_Message_For_LED(FIRST_ECHO);Global_u8EchoState=LECHO_FLAG;	Current_LED_Echo=First_Echo;Global_u8Echo_Status_Flag=1;
 	}
+
+
+	if(GET_BIT(Data,0)==1  && GET_BIT(Data,1)==0  && GET_BIT(Data,2)==0  && GET_BIT(Data,3)==0  && GET_BIT(Data,4)==0 && Global_u8BulletState==HIGH_EXPO_FLAG)
+	{
+		Global_u8BulletState=HEAT_FLAG;
+		USART1_VoidWriteString((u8 *)"*High Exp#");
+		Current_LED_Bullet=High_Exp;
+		Control_Panelvoid_Message_For_LED(HIGH_EXP);
+		Global_u8Bullets_Flag=0;
+	}
+	if(GET_BIT(Data,0)==0  && GET_BIT(Data,1)==1  && GET_BIT(Data,2)==0  && GET_BIT(Data,3)==0 && GET_BIT(Data,4)==0 && Global_u8BulletState==HEAT_FLAG )
+	{
+		Global_u8BulletState=SABOT_FLAG;
+		USART1_VoidWriteString((u8 *)"*Heat#");
+		Current_LED_Bullet=Heat;
+		Control_Panelvoid_Message_For_LED(HEAT);
+		Global_u8Bullets_Flag=0;
+		Global_u8BulletsOn=1;
+	}
+	if(GET_BIT(Data,0)==0  && GET_BIT(Data,1)==0  && GET_BIT(Data,2)==1  && GET_BIT(Data,3)==0  && GET_BIT(Data,4)==0 && Global_u8BulletState==SABOT_FLAG)
+	{
+		Global_u8BulletState=HEAT_FLAG;
+		USART1_VoidWriteString((u8 *)"*Sabot#");
+		Current_LED_Bullet=Sabot;
+		Control_Panelvoid_Message_For_LED(SABOT);
+		Global_u8Bullets_Flag=0;
+		Global_u8BulletsOn=1;
+	}
+	if(GET_BIT(Data,0)==0  && GET_BIT(Data,1)==0  && GET_BIT(Data,2)==0  && GET_BIT(Data,3)==1  && GET_BIT(Data,4)==0 && Global_u8BulletState==HEP_FLAG)
+	{
+		Global_u8BulletState=COAXIAL_GUN_FLAG;
+		USART1_VoidWriteString((u8 *)"*Sub Caliber#");
+		Global_u8Bullets_Flag=0;
+		Current_LED_Bullet=Hep;
+		Control_Panelvoid_Message_For_LED(HEP);
+		Global_u8BulletsOn=1;
+	}
+	if(GET_BIT(Data,0)==0  && GET_BIT(Data,1)==0  && GET_BIT(Data,2)==0  && GET_BIT(Data,3)==0  && GET_BIT(Data,4)==1 && Global_u8BulletState==COAXIAL_GUN_FLAG)
+	{
+		Global_u8BulletState=HEP_FLAG;
+		Global_u8Bullets_Flag=1;
+		USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
+		Current_LED_Bullet=Coaxial;
+		Control_Panelvoid_Message_For_LED(Coaxial_GUN);
+		Global_u8BulletsOn=1;
+	}
+
 }
 
 
