@@ -1,5 +1,5 @@
 /***************************************************************************************************/
-/* Author  : Enjy Mohamed                                                                          */
+/* Author  : Enjy Mohamed && WALEEDC                                                                      */
 /* Version : V01                                                                                   */
 /* Date    : 10 Feb 2023                                                                           */
 /* Company : AIO                                                                                   */
@@ -153,13 +153,13 @@ u8 * USART1_u8ReadString () {
 /* 13 is the ASCII code for new line */
 
 		while( ( last_entered_data = USART1_u8ReadCharacter() ) != 13 ){
-
 			String[ factor ] = last_entered_data ;
-			USART1_VoidWriteCharacter(last_entered_data);
 			factor++;
 		}
 
 		String[factor] = '\0';
+
+		//USART1_VoidWriteCharacter(',');
 
 		return ( String );
 
@@ -281,3 +281,37 @@ void printBinary16(u16 num) {
     USART1_VoidWriteCharacter('\n'); // Add a newline for better formatting
 }
 
+/* Function to receive a byte without blocking */
+u8 USART1_ReceiveByteNonBlocking(u8 *data)
+{
+    if (GET_BIT(USART1_SR, 5)) // Check if RXNE (bit 5 of USART_SR) is set
+    {
+        *data = (u8)USART1_DR; // Read received data
+        return 1; // Data received successfully
+    }
+    return 0; // No data available
+}
+
+u8* USART1_u8ReadString_NonBlocking()
+{
+    static u8 receivedString[50]={0}; // Buffer
+    static u8 i = 0; // Keep track of index across calls
+    u8 receivedByte;
+
+    // Read available bytes one by one
+    if (USART1_ReceiveByteNonBlocking(&receivedByte))
+    {
+        if (receivedByte == '\n' || receivedByte == '\r') // Stop on Enter
+        {
+            receivedString[i] = '\0'; // Null-terminate string
+            i = 0; // Reset index for next message
+            return receivedString; // Return completed string
+        }
+        else if (i < sizeof(receivedString) - 1) // Prevent buffer overflow
+        {
+            receivedString[i++] = receivedByte;
+        }
+    }
+
+    return NULL; // Return NULL if the string is not complete
+}

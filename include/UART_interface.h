@@ -39,6 +39,8 @@ void USART1_VoidOutputTempSensor(u32 Copy_u16ReadingOfTempSensor);
 void USART1_VoidWriteNumber(u32 Copy_u32TotalNumber);
 void printBinary(u8 num) ;
 void printBinary16(u16 num);
+u8 USART1_ReceiveByteNonBlocking(u8 *data);
+u8* USART1_u8ReadString_NonBlocking();
 
 #endif /* UART_INTERFACE_H_ */
 
