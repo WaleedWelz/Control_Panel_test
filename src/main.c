@@ -18,6 +18,7 @@ void INT_First_Echo_LAST_ECHO(void);
 /*void INT_SABOT(void);
 void INT_HEAT(void);
 void INT_HIGH_EXPO(void);*/
+void CheckSwitchState();
 
 
 
@@ -48,6 +49,8 @@ u8 Global_u8BulletCounter=0;
 
 enum Status Current_LED_Echo; // Enum Object to Store the Echo status used in Lightening the corresponding LED at startup
 enum Status Current_LED_Bullet;// Enum Object to Store the Bullet status used in Lightening the corresponding LED at startup
+
+static u16 Previous_u16SwitchsData = 0xFFFF;  // Store previous state
 
 void main()
 {
@@ -302,6 +305,9 @@ void main()
 
 			Global_u16SwitchsData=ShiftRegister_u16GetData();
 
+			CheckSwitchState();
+
+
 			if(GET_BIT(Global_u16SwitchsData,7)==1)
 			{
 				if(Global_u8Day_Thermal_Flag==0) // thermal status
@@ -314,73 +320,6 @@ void main()
 
 				}
 			}
-
-			if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==0 && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletsOn==1 )
-			{
-				Global_u8BulletsOn=0;
-			}
-			if(GET_BIT(Global_u16SwitchsData,0)==1  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==0  && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletState==HIGH_EXPO_FLAG && Global_u8BulletsOn==0)
-			{
-
-				Global_u8BulletState=HEAT_FLAG;
-				Global_u8BulletsOn=1;
-				USART1_VoidWriteString((u8 *)"*High Exp#");
-				Current_LED_Bullet=High_Exp;
-				Control_Panelvoid_Message_For_LED(HIGH_EXP);
-				Global_u8Bullets_Flag=0;
-			}
-
-			if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==1  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==0 && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletState==HEAT_FLAG && Global_u8BulletsOn==0)
-			{
-
-				Global_u8BulletState=SABOT_FLAG;
-				USART1_VoidWriteString((u8 *)"*Heat#");
-				Current_LED_Bullet=Heat;
-				Control_Panelvoid_Message_For_LED(HEAT);
-				Global_u8Bullets_Flag=0;
-				Global_u8BulletsOn=1;
-
-			}
-			if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==1  && GET_BIT(Global_u16SwitchsData,3)==0  && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletState==SABOT_FLAG && Global_u8BulletsOn==0 )
-			{
-
-
-				Global_u8BulletState=HEAT_FLAG;
-				USART1_VoidWriteString((u8 *)"*Sabot#");
-				Current_LED_Bullet=Sabot;
-				Control_Panelvoid_Message_For_LED(SABOT);
-				Global_u8Bullets_Flag=0;
-				Global_u8BulletsOn=1;
-
-			}
-			if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==1  && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletState==HEP_FLAG && Global_u8BulletsOn==0)
-			{
-
-
-				Global_u8BulletState=COAXIAL_GUN_FLAG;
-				USART1_VoidWriteString((u8 *)"*Sub Caliber#");
-				Global_u8Bullets_Flag=0;
-				Current_LED_Bullet=Hep;
-				Control_Panelvoid_Message_For_LED(HEP);
-				Global_u8BulletsOn=1;
-
-			}
-			if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==0  && GET_BIT(Global_u16SwitchsData,4)==1 && Global_u8BulletState==COAXIAL_GUN_FLAG && Global_u8BulletsOn==0 )
-			{
-
-				Global_u8BulletState=HEP_FLAG;
-				Global_u8Bullets_Flag=1;
-				USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
-				Current_LED_Bullet=Coaxial;
-				Control_Panelvoid_Message_For_LED(Coaxial_GUN);
-				Global_u8BulletsOn=1;
-			}
-
-
-
-
-
-
 
 		}
 	}
@@ -505,3 +444,63 @@ void INT_HEP_COAXIAL_GUN(void)
 }
 
  */
+
+
+
+void CheckSwitchState()
+{
+    if (Previous_u16SwitchsData != Global_u16SwitchsData)  // Only process changes
+    {
+        Previous_u16SwitchsData = Global_u16SwitchsData;  // Update previous state
+
+        if((Global_u16SwitchsData & 0x1F) == 0 && Global_u8BulletsOn == 1) // No switch pressed
+        {
+            Global_u8BulletsOn = 0;
+        }
+        else if((Global_u16SwitchsData & 0x1F) == 0x01 && Global_u8BulletState == HIGH_EXPO_FLAG && Global_u8BulletsOn == 0)
+        {
+            Global_u8BulletState = HEAT_FLAG;
+            Global_u8BulletsOn = 1;
+            USART1_VoidWriteString((u8 *)"*High Exp#");
+            Current_LED_Bullet = High_Exp;
+            Control_Panelvoid_Message_For_LED(HIGH_EXP);
+            Global_u8Bullets_Flag = 0;
+        }
+        else if((Global_u16SwitchsData & 0x1F) == 0x02 && Global_u8BulletState == HEAT_FLAG && Global_u8BulletsOn == 0)
+        {
+            Global_u8BulletState = SABOT_FLAG;
+            USART1_VoidWriteString((u8 *)"*Heat#");
+            Current_LED_Bullet = Heat;
+            Control_Panelvoid_Message_For_LED(HEAT);
+            Global_u8Bullets_Flag = 0;
+            Global_u8BulletsOn = 1;
+        }
+        else if((Global_u16SwitchsData & 0x1F) == 0x04 && Global_u8BulletState == SABOT_FLAG && Global_u8BulletsOn == 0)
+        {
+            Global_u8BulletState = HEAT_FLAG;
+            USART1_VoidWriteString((u8 *)"*Sabot#");
+            Current_LED_Bullet = Sabot;
+            Control_Panelvoid_Message_For_LED(SABOT);
+            Global_u8Bullets_Flag = 0;
+            Global_u8BulletsOn = 1;
+        }
+        else if((Global_u16SwitchsData & 0x1F) == 0x08 && Global_u8BulletState == HEP_FLAG && Global_u8BulletsOn == 0)
+        {
+            Global_u8BulletState = COAXIAL_GUN_FLAG;
+            USART1_VoidWriteString((u8 *)"*Sub Caliber#");
+            Global_u8Bullets_Flag = 0;
+            Current_LED_Bullet = Hep;
+            Control_Panelvoid_Message_For_LED(HEP);
+            Global_u8BulletsOn = 1;
+        }
+        else if((Global_u16SwitchsData & 0x1F) == 0x10 && Global_u8BulletState == COAXIAL_GUN_FLAG && Global_u8BulletsOn == 0)
+        {
+            Global_u8BulletState = HEP_FLAG;
+            Global_u8Bullets_Flag = 1;
+            USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
+            Current_LED_Bullet = Coaxial;
+            Control_Panelvoid_Message_For_LED(Coaxial_GUN);
+            Global_u8BulletsOn = 1;
+        }
+    }
+}

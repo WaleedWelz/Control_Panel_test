@@ -270,25 +270,6 @@ void Control_Panel_voidStartUpLeds(void)
 
 	Global_u8BulletsOn=0;
 
-	if(Global_u8BulletState==HIGH_EXPO_FLAG)
-	{
-
-	}
-	if(Global_u8BulletState==HEAT_FLAG)
-	{
-
-	}
-	if(Global_u8BulletState==SABOT_FLAG)
-	{
-
-	}
-	if(Global_u8BulletState==HEP_FLAG)
-	{
-
-	}
-	if(Global_u8BulletState==COAXIAL_GUN_FLAG)
-	{
-	}
 
 
 
