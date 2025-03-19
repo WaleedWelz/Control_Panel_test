@@ -267,64 +267,27 @@ void resetLamps(void)
 void Control_Panel_voidStartUpLeds(void)
 {
 
-	u16 Data=ShiftRegister_u16GetData();
-	for(u8 i=0;i<5;i++)
-	{
-		if(GET_BIT(Data,i)==1)
-		{
-			switch(i)
-			{
-			case 4: Control_Panelvoid_Message_For_LED(Coaxial_GUN);Current_LED_Bullet=Coaxial;Global_u8BulletState=COAXIAL_GUN_FLAG;break;
-			case 3: Control_Panelvoid_Message_For_LED(HEP);Current_LED_Bullet=Hep;Global_u8Bullets_Flag=0;Global_u8BulletState=HEP_FLAG;break;
-			case 2:	Control_Panelvoid_Message_For_LED(SABOT);Current_LED_Bullet=Sabot;Global_u8BulletState=SABOT_FLAG;break;
-			case 1: Control_Panelvoid_Message_For_LED(HEAT); Current_LED_Bullet=Heat;Global_u8BulletState=HEAT_FLAG; break;
-			case 0: Control_Panelvoid_Message_For_LED(HIGH_EXP);Current_LED_Bullet=High_Exp;Global_u8BulletState=HIGH_EXPO_FLAG;break;
-			}
-
-		}
-	}
 
 	Global_u8BulletsOn=0;
 
 	if(Global_u8BulletState==HIGH_EXPO_FLAG)
 	{
-		Global_u8BulletState=HEAT_FLAG;
-		USART1_VoidWriteString((u8 *)"*High Exp#");
-		Current_LED_Bullet=High_Exp;
-		Control_Panelvoid_Message_For_LED(HIGH_EXP);
-		Global_u8Bullets_Flag=0;
+
 	}
 	if(Global_u8BulletState==HEAT_FLAG)
 	{
-		Global_u8BulletState=SABOT_FLAG;
-		USART1_VoidWriteString((u8 *)"*Heat#");
-		Current_LED_Bullet=Heat;
-		Control_Panelvoid_Message_For_LED(HEAT);
-		Global_u8Bullets_Flag=0;
+
 	}
 	if(Global_u8BulletState==SABOT_FLAG)
 	{
-		Global_u8BulletState=HEAT_FLAG;
-		USART1_VoidWriteString((u8 *)"*Sabot#");
-		Current_LED_Bullet=Sabot;
-		Control_Panelvoid_Message_For_LED(SABOT);
-		Global_u8Bullets_Flag=0;
+
 	}
 	if(Global_u8BulletState==HEP_FLAG)
 	{
-		Global_u8BulletState=COAXIAL_GUN_FLAG;
-		USART1_VoidWriteString((u8 *)"*Sub Caliber#");
-		Global_u8Bullets_Flag=0;
-		Current_LED_Bullet=Hep;
-		Control_Panelvoid_Message_For_LED(HEP);
+
 	}
 	if(Global_u8BulletState==COAXIAL_GUN_FLAG)
 	{
-		Global_u8BulletState=HEP_FLAG;
-		Global_u8Bullets_Flag=1;
-		USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
-		Current_LED_Bullet=Coaxial;
-		Control_Panelvoid_Message_For_LED(Coaxial_GUN);
 	}
 
 
@@ -382,6 +345,45 @@ void Control_Panel_voidStartUpLeds(void)
 	{
 		USART1_VoidWriteString((u8 *)"First Echo,");Control_Panelvoid_Message_For_LED(FIRST_ECHO);Global_u8EchoState=LECHO_FLAG;	Current_LED_Echo=First_Echo;Global_u8Echo_Status_Flag=1;
 	}
+
+	u16 Data=ShiftRegister_u16GetData();
+		for(u8 i=0;i<5;i++)
+		{
+			if(GET_BIT(Data,i)==1)
+			{
+				switch(i)
+				{
+				case 4: Control_Panelvoid_Message_For_LED(Coaxial_GUN);Current_LED_Bullet=Coaxial;
+				Global_u8BulletState=HEP_FLAG;
+				Global_u8Bullets_Flag=1;
+				USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
+				Current_LED_Bullet=Coaxial;
+				Control_Panelvoid_Message_For_LED(Coaxial_GUN);break;
+				case 3: Control_Panelvoid_Message_For_LED(HEP);Current_LED_Bullet=Hep;Global_u8Bullets_Flag=0;Global_u8BulletState=COAXIAL_GUN_FLAG;
+				USART1_VoidWriteString((u8 *)"*Sub Caliber#");
+				Global_u8Bullets_Flag=0;
+				Current_LED_Bullet=Hep;
+				Control_Panelvoid_Message_For_LED(HEP);break;
+				case 2:	Control_Panelvoid_Message_For_LED(SABOT);Current_LED_Bullet=Sabot;Global_u8BulletState=HEAT_FLAG;
+				USART1_VoidWriteString((u8 *)"*Sabot#");
+				Current_LED_Bullet=Sabot;
+				Control_Panelvoid_Message_For_LED(SABOT);
+				Global_u8Bullets_Flag=0;break;
+				case 1: Control_Panelvoid_Message_For_LED(HEAT); Current_LED_Bullet=Heat;Global_u8BulletState=SABOT_FLAG;
+				USART1_VoidWriteString((u8 *)"*Heat#");
+				Current_LED_Bullet=Heat;
+				Control_Panelvoid_Message_For_LED(HEAT);
+				Global_u8Bullets_Flag=0; break;
+				case 0: Control_Panelvoid_Message_For_LED(HIGH_EXP);Current_LED_Bullet=High_Exp;Global_u8BulletState=HEAT_FLAG;
+				USART1_VoidWriteString((u8 *)"*High Exp#");
+				Current_LED_Bullet=High_Exp;
+				Control_Panelvoid_Message_For_LED(HIGH_EXP);
+				Global_u8Bullets_Flag=0;break;
+				}
+
+			}
+		}
+
 }
 
 
