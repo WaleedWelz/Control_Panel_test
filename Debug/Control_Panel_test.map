@@ -1897,10 +1897,10 @@ END GROUP
 
 .inits          0x08000350       0x28
                 0x08000350                __data_regions_array_start = .
-                0x08000350        0x4 LONG 0x80027a4 LOADADDR (.data)
+                0x08000350        0x4 LONG 0x8002708 LOADADDR (.data)
                 0x08000354        0x4 LONG 0x20000000 ADDR (.data)
                 0x08000358        0x4 LONG 0x2000008c (ADDR (.data) + SIZEOF (.data))
-                0x0800035c        0x4 LONG 0x80027a4 LOADADDR (.data_CCMRAM)
+                0x0800035c        0x4 LONG 0x8002708 LOADADDR (.data_CCMRAM)
                 0x08000360        0x4 LONG 0x0 ADDR (.data_CCMRAM)
                 0x08000364        0x4 LONG 0x0 (ADDR (.data_CCMRAM) + SIZEOF (.data_CCMRAM))
                 0x08000368                __data_regions_array_end = .
@@ -1932,7 +1932,7 @@ END GROUP
 .flashtext
  *(.flashtext .flashtext.*)
 
-.text           0x08000378     0x242b
+.text           0x08000378     0x238f
  *(.text .text.*)
  .text._exit    0x08000378        0x2 ./system/src/newlib/_exit.o
                 0x08000378                _exit
@@ -2149,64 +2149,62 @@ END GROUP
                 0x080025d0       0x2a ./system/src/cortexm/exception_handlers.o
  *fill*         0x080025fa        0x2 
  .rodata.Control_Panel_voidStartUpLeds.str1.4
-                0x080025fc       0x8b ./src/Control_Panel.o
+                0x080025fc       0x45 ./src/Control_Panel.o
  .rodata.CheckSwitchState.str1.4
-                0x08002687       0x3a ./src/main.o
- *fill*         0x08002687        0x1 
+                0x08002641       0x25 ./src/main.o
+ *fill*         0x08002641        0x3 
  .rodata.INT_DAY_THERMAL.str1.4
-                0x08002688       0x12 ./src/main.o
- *fill*         0x0800269a        0x2 
+                0x08002644        0x8 ./src/main.o
  .rodata.INT_First_Echo_LAST_ECHO.str1.4
-                0x0800269c       0x17 ./src/main.o
- *fill*         0x080026b3        0x1 
+                0x0800264c        0xd ./src/main.o
+ *fill*         0x08002659        0x3 
  .rodata.INT_NFOV.str1.4
-                0x080026b4        0x7 ./src/main.o
- *fill*         0x080026bb        0x1 
+                0x0800265c        0x4 ./src/main.o
  .rodata.main.str1.4
-                0x080026bc       0xb4 ./src/main.o
-                                 0xb2 (size before relaxing)
+                0x08002660       0x74 ./src/main.o
+                                 0x72 (size before relaxing)
  .rodata._svfprintf_r.str1.1
-                0x08002770       0x11 d:/imt_sdk_win_64/winarm/armgcc/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libg_nano.a(lib_a-nano-svfprintf.o)
+                0x080026d4       0x11 d:/imt_sdk_win_64/winarm/armgcc/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libg_nano.a(lib_a-nano-svfprintf.o)
  .rodata._printf_i.str1.1
-                0x08002781       0x22 d:/imt_sdk_win_64/winarm/armgcc/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libg_nano.a(lib_a-nano-vfprintf_i.o)
+                0x080026e5       0x22 d:/imt_sdk_win_64/winarm/armgcc/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libg_nano.a(lib_a-nano-vfprintf_i.o)
  *(vtable)
  *(.eh_frame*)
  *(.glue_7)
- .glue_7        0x080027a3        0x0 linker stubs
+ .glue_7        0x08002707        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x080027a3        0x0 linker stubs
+ .glue_7t       0x08002707        0x0 linker stubs
 
-.vfp11_veneer   0x080027a4        0x0
- .vfp11_veneer  0x080027a4        0x0 linker stubs
+.vfp11_veneer   0x08002708        0x0
+ .vfp11_veneer  0x08002708        0x0 linker stubs
 
-.v4_bx          0x080027a4        0x0
- .v4_bx         0x080027a4        0x0 linker stubs
+.v4_bx          0x08002708        0x0
+ .v4_bx         0x08002708        0x0 linker stubs
 
-.iplt           0x080027a4        0x0
- .iplt          0x080027a4        0x0 ./system/src/newlib/_exit.o
+.iplt           0x08002708        0x0
+ .iplt          0x08002708        0x0 ./system/src/newlib/_exit.o
 
-.rel.dyn        0x080027a4        0x0
- .rel.iplt      0x080027a4        0x0 ./system/src/newlib/_exit.o
+.rel.dyn        0x08002708        0x0
+ .rel.iplt      0x08002708        0x0 ./system/src/newlib/_exit.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x080027a4                . = ALIGN (0x4)
-                0x080027a4                __exidx_start = .
+                0x08002708                . = ALIGN (0x4)
+                0x08002708                __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x080027a4                __exidx_end = .
-                0x080027a4                . = ALIGN (0x4)
-                0x080027a4                _etext = .
-                0x080027a4                __etext = .
+                0x08002708                __exidx_end = .
+                0x08002708                . = ALIGN (0x4)
+                0x08002708                _etext = .
+                0x08002708                __etext = .
 
-.data_CCMRAM    0x00000000        0x0 load address 0x080027a4
+.data_CCMRAM    0x00000000        0x0 load address 0x08002708
  FILL mask 0xff
  *(.data.CCMRAM .data.CCMRAM.*)
                 0x00000000                . = ALIGN (0x4)
-                0x080027a4                _sidata = LOADADDR (.data)
+                0x08002708                _sidata = LOADADDR (.data)
 
-.data           0x20000000       0x8c load address 0x080027a4
+.data           0x20000000       0x8c load address 0x08002708
  FILL mask 0xff
                 0x20000000                _sdata = .
                 0x20000000                __data_start__ = .
@@ -2235,7 +2233,7 @@ END GROUP
                 0x2000008c                _edata = .
                 0x2000008c                __data_end__ = .
 
-.igot.plt       0x2000008c        0x0 load address 0x08002830
+.igot.plt       0x2000008c        0x0 load address 0x08002794
  .igot.plt      0x2000008c        0x0 ./system/src/newlib/_exit.o
 
 .bss_CCMRAM     0x00000000        0x0

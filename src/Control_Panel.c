@@ -275,11 +275,11 @@ void Control_Panel_voidStartUpLeds(void)
 
 	if(MGPIO_u8GetPinValue(PORTA,PIN15) == 1)
 	{
-		USART1_VoidWriteString((u8 *)"Thermal,");Global_u8Day_Thermal_Flag=0;Global_u8DTStateFlag=0;
+		USART1_VoidWriteString((u8 *)"T,");Global_u8Day_Thermal_Flag=0;Global_u8DTStateFlag=0;
 	}
 	if(MGPIO_u8GetPinValue(PORTA, PIN15) == 0) // if the switch is open it will read Thermal as its single position switch
 	{
-		USART1_VoidWriteString((u8 *)"Day,");Global_u8Day_Thermal_Flag=1;Global_u8DTStateFlag=1;
+		USART1_VoidWriteString((u8 *)"D,");Global_u8Day_Thermal_Flag=1;Global_u8DTStateFlag=1;
 	}
 	//	if(MGPIO_u8GetPinValue(PORTA,PIN1)==0 && MGPIO_u8GetPinValue(PORTA,PIN2)==0 && MGPIO_u8GetPinValue(PORTA,PIN3)==0 && MGPIO_u8GetPinValue(PORTA,PIN4)==0)
 	//	{
@@ -291,7 +291,7 @@ void Control_Panel_voidStartUpLeds(void)
 	if(MGPIO_u8GetPinValue(PORTB,0) == 0 && MGPIO_u8GetPinValue(PORTA,5) == 0)
 	{
 		Global_u8FVState=WFV_FLAG;
-		USART1_VoidWriteString((u8 *)"NFOV,");Control_Panelvoid_Message_For_LED(MFOV); Global_u8FV_Status_Flag=1;Current_LED_Bullet=Mfov;
+		USART1_VoidWriteString((u8 *)"N,");Control_Panelvoid_Message_For_LED(MFOV); Global_u8FV_Status_Flag=1;Current_LED_Bullet=Mfov;
 	}
 	if(MGPIO_u8GetPinValue(PORTB, PIN0) == 1)
 	{
@@ -299,7 +299,7 @@ void Control_Panel_voidStartUpLeds(void)
 		{
 			Global_u8FVState=MFV_FLAG;
 			Global_u8FV_Status_Flag=1;
-			USART1_VoidWriteString((u8 *)"FFOV,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_Bullet=Nfov;
+			USART1_VoidWriteString((u8 *)"F,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_Bullet=Nfov;
 		}
 		else if(Global_u8Day_Thermal_Flag==1)
 		{
@@ -314,9 +314,9 @@ void Control_Panel_voidStartUpLeds(void)
 		{
 			switch (i)
 			{
-			case 5: USART1_VoidWriteString((u8 *)"WFOV,");Control_Panelvoid_Message_For_LED(WFOV); Global_u8FV_Status_Flag=1;Global_u8FVState=MFV_FLAG;Current_LED_Bullet=Wfov; break;
-			case 7: USART1_VoidWriteString((u8 *)"Last Echo,");Control_Panelvoid_Message_For_LED(LAST_ECHO);Global_u8EchoState=FECHO_FLAG;	Current_LED_Echo=Last_Echo;Global_u8Echo_Status_Flag=1;break;
-			case 6:	USART1_VoidWriteString((u8 *)"Echo Off,");Control_Panelvoid_Message_For_LED(ECHO_OFF);Global_u8EchoState=FECHO_FLAG;Current_LED_Echo=Off;Global_u8Echo_Status_Flag=1;break;
+			case 5: USART1_VoidWriteString((u8 *)"W,");Control_Panelvoid_Message_For_LED(WFOV); Global_u8FV_Status_Flag=1;Global_u8FVState=MFV_FLAG;Current_LED_Bullet=Wfov; break;
+			case 7: USART1_VoidWriteString((u8 *)"LE,");Control_Panelvoid_Message_For_LED(LAST_ECHO);Global_u8EchoState=FECHO_FLAG;	Current_LED_Echo=Last_Echo;Global_u8Echo_Status_Flag=1;break;
+			case 6:	USART1_VoidWriteString((u8 *)"EO,");Control_Panelvoid_Message_For_LED(ECHO_OFF);Global_u8EchoState=FECHO_FLAG;Current_LED_Echo=Off;Global_u8Echo_Status_Flag=1;break;
 
 			default:break;
 			}
@@ -324,7 +324,7 @@ void Control_Panel_voidStartUpLeds(void)
 	}
 	if(MGPIO_u8GetPinValue(PORTA, PIN6) == 0 && MGPIO_u8GetPinValue(PORTA, 7) == 0) // If PIN6 and PIN7 are not pressed Echo off will be selected
 	{
-		USART1_VoidWriteString((u8 *)"First Echo,");Control_Panelvoid_Message_For_LED(FIRST_ECHO);Global_u8EchoState=LECHO_FLAG;	Current_LED_Echo=First_Echo;Global_u8Echo_Status_Flag=1;
+		USART1_VoidWriteString((u8 *)"FE,");Control_Panelvoid_Message_For_LED(FIRST_ECHO);Global_u8EchoState=LECHO_FLAG;	Current_LED_Echo=First_Echo;Global_u8Echo_Status_Flag=1;
 	}
 
 	u16 Data=ShiftRegister_u16GetData();
@@ -337,26 +337,26 @@ void Control_Panel_voidStartUpLeds(void)
 				case 4: Control_Panelvoid_Message_For_LED(Coaxial_GUN);Current_LED_Bullet=Coaxial;
 				Global_u8BulletState=HEP_FLAG;
 				Global_u8Bullets_Flag=1;
-				USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
+				USART1_VoidWriteString((u8 *)"*CG#");
 				Current_LED_Bullet=Coaxial;
 				Control_Panelvoid_Message_For_LED(Coaxial_GUN);break;
 				case 3: Control_Panelvoid_Message_For_LED(HEP);Current_LED_Bullet=Hep;Global_u8Bullets_Flag=0;Global_u8BulletState=COAXIAL_GUN_FLAG;
-				USART1_VoidWriteString((u8 *)"*Sub Caliber#");
+				USART1_VoidWriteString((u8 *)"*SC#");
 				Global_u8Bullets_Flag=0;
 				Current_LED_Bullet=Hep;
 				Control_Panelvoid_Message_For_LED(HEP);break;
 				case 2:	Control_Panelvoid_Message_For_LED(SABOT);Current_LED_Bullet=Sabot;Global_u8BulletState=HEAT_FLAG;
-				USART1_VoidWriteString((u8 *)"*Sabot#");
+				USART1_VoidWriteString((u8 *)"*ST#");
 				Current_LED_Bullet=Sabot;
 				Control_Panelvoid_Message_For_LED(SABOT);
 				Global_u8Bullets_Flag=0;break;
 				case 1: Control_Panelvoid_Message_For_LED(HEAT); Current_LED_Bullet=Heat;Global_u8BulletState=SABOT_FLAG;
-				USART1_VoidWriteString((u8 *)"*Heat#");
+				USART1_VoidWriteString((u8 *)"*HT#");
 				Current_LED_Bullet=Heat;
 				Control_Panelvoid_Message_For_LED(HEAT);
 				Global_u8Bullets_Flag=0; break;
 				case 0: Control_Panelvoid_Message_For_LED(HIGH_EXP);Current_LED_Bullet=High_Exp;Global_u8BulletState=HEAT_FLAG;
-				USART1_VoidWriteString((u8 *)"*High Exp#");
+				USART1_VoidWriteString((u8 *)"*HE#");
 				Current_LED_Bullet=High_Exp;
 				Control_Panelvoid_Message_For_LED(HIGH_EXP);
 				Global_u8Bullets_Flag=0;break;

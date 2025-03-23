@@ -131,7 +131,7 @@ void main()
 
 		if(Global_u8StartCounter==STARTUP_MESSAGE_LETTERS_NUMBER)
 		{
-			USART1_VoidWriteString((u8*)"*Start,");
+			USART1_VoidWriteString((u8*)"*S,");
 
 			Control_Panel_voidStartUpLeds(); // Know which Switch position was selected and Light the corresponding LED
 
@@ -144,7 +144,7 @@ void main()
 		{
 			delay_voidXms(500);
 
-			USART1_VoidWriteString((u8*)"*Start,");
+			USART1_VoidWriteString((u8*)"*S,");
 
 			Control_Panel_voidStartUpLeds(); // Know which Switch position was selected and Light the corresponding LED
 
@@ -163,7 +163,7 @@ void main()
 			{
 				if(Global_u8Day_Thermal_Flag==0)
 				{
-					USART1_VoidWriteString((u8 *)"*Focus+#");
+					USART1_VoidWriteString((u8 *)"*F+#");
 					delay_voidXms(500);
 				}
 				else
@@ -174,7 +174,7 @@ void main()
 			if(MGPIO_u8GetPinValue(PORTB,PIN4)==1)
 			{
 
-				USART1_VoidWriteString((u8 *)"*Auto#");
+				USART1_VoidWriteString((u8 *)"*A#");
 				delay_voidXms(500);
 			}
 			if(MGPIO_u8GetPinValue(PORTB,PIN12)==1)
@@ -184,47 +184,47 @@ void main()
 			if(MGPIO_u8GetPinValue(PORTB,PIN5)==1)
 			{
 
-				USART1_VoidWriteString((u8 *)"*Exposure-#");
+				USART1_VoidWriteString((u8 *)"*E-#");
 				delay_voidXms(500);
 			}
 
 			if(MGPIO_u8GetPinValue(PORTB,1) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*Full Screen#");
+				USART1_VoidWriteString((u8 *)"*LRFF#");
 				delay_voidXms(500);
 			}
 			if(MGPIO_u8GetPinValue(PORTA,8) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*Contrast+#");
+				USART1_VoidWriteString((u8 *)"*C+#");
 				delay_voidXms(500);
 			}
 			if(MGPIO_u8GetPinValue(PORTB,7) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*Contrast-#");
+				USART1_VoidWriteString((u8 *)"*C-#");
 				delay_voidXms(500);
 			}
 
 			if(MGPIO_u8GetPinValue(PORTB,13) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*Color#");
+				USART1_VoidWriteString((u8 *)"*CLR#");
 
 				delay_voidXms(500);
 			}
 			if(MGPIO_u8GetPinValue(PORTB,11) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*Battle Range#");
+				USART1_VoidWriteString((u8 *)"*BTLRNG#");
 
 				delay_voidXms(500);
 			}
 			if(MGPIO_u8GetPinValue(PORTA,11) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*Bright+#");
+				USART1_VoidWriteString((u8 *)"*B+#");
 
 				delay_voidXms(500);
 			}
 			if(MGPIO_u8GetPinValue(PORTB,6) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*Bright-#");
+				USART1_VoidWriteString((u8 *)"*B-#");
 
 				delay_voidXms(500);
 			}
@@ -268,7 +268,7 @@ void main()
 				Global_u8EchoState=LECHO_FLAG;
 				Global_u8Echo_Status_Flag=0;
 				Control_Panelvoid_Message_For_LED(FIRST_ECHO);
-				USART1_VoidWriteString((u8 *)"*First Echo#");
+				USART1_VoidWriteString((u8 *)"*FE#");
 				Current_LED_Echo=First_Echo;
 			}
 			if(MGPIO_u8GetPinValue(PORTB,0) == 0 && MGPIO_u8GetPinValue(PORTA,5) == 0 && Global_u8FV_Status_Flag==1 && Global_u8FVState==MFV_FLAG)
@@ -276,7 +276,7 @@ void main()
 				Global_u8FV_Status_Flag=0;
 				Global_u8FVState=NFV_FLAG;
 				Control_Panelvoid_Message_For_LED(MFOV);
-				USART1_VoidWriteString((u8 *)"*NFOV#");
+				USART1_VoidWriteString((u8 *)"*N#");
 				Current_LED_Echo=Mfov;
 			}
 
@@ -291,7 +291,7 @@ void main()
 					Global_u8FVState=MFV_FLAG;
 					Global_u8WideFlag=1;
 					Global_u8FV_Status_Flag=1;
-					USART1_VoidWriteString((u8 *)"*WFOV#");
+					USART1_VoidWriteString((u8 *)"*W#");
 					Control_Panelvoid_Message_For_LED(WFOV);
 					Current_LED_Echo=Wfov;
 				}
@@ -312,7 +312,7 @@ void main()
 			{
 				if(Global_u8Day_Thermal_Flag==0) // thermal status
 				{
-					USART1_VoidWriteString((u8 *)"*Focus-#");
+					USART1_VoidWriteString((u8 *)"*F-#");
 					delay_voidXms(500);
 				}
 				else
@@ -336,14 +336,14 @@ void INT_DAY_THERMAL(void){
 
 	if(Local_u8Pin1_value==1 && Global_u8DTStateFlag==1)
 	{
-		USART1_VoidWriteString((u8 *)"*Thermal#");
+		USART1_VoidWriteString((u8 *)"*T#");
 		delay_voidXms(10);
 		Global_u8Day_Thermal_Flag=0;
 		Global_u8DTStateFlag=0;
 	}
 	else if(Local_u8Pin1_value==0 && Global_u8DTStateFlag==0)
 	{
-		USART1_VoidWriteString((u8 *)"*Day#");
+		USART1_VoidWriteString((u8 *)"*D#");
 		delay_voidXms(10);
 		Global_u8Day_Thermal_Flag=1;
 		Global_u8DTStateFlag=1;
@@ -363,7 +363,7 @@ void INT_NFOV(void)
 		{
 			Global_u8FVState=MFV_FLAG;
 			Global_u8FV_Status_Flag=1;
-			USART1_VoidWriteString((u8 *)"*FFOV#");
+			USART1_VoidWriteString((u8 *)"*F#");
 			Current_LED_Echo=Nfov;
 			Control_Panelvoid_Message_For_LED(NFOV);
 		}
@@ -388,7 +388,7 @@ void INT_First_Echo_LAST_ECHO(void)
 		Global_u8Echo_Status_Flag=1;
 		Control_Panelvoid_Message_For_LED(LAST_ECHO);
 		Current_LED_Echo=Last_Echo;
-		USART1_VoidWriteString((u8 *)"*Last Echo#");
+		USART1_VoidWriteString((u8 *)"*LE#");
 	}
 	else if(Local_u8Pin6_value==1 && Global_u8Echo_Status_Flag==0 && Global_u8EchoState==OFF_FLAG)
 	{
@@ -396,7 +396,7 @@ void INT_First_Echo_LAST_ECHO(void)
 		Global_u8Echo_Status_Flag=1;
 		Control_Panelvoid_Message_For_LED(ECHO_OFF);
 		Current_LED_Echo=Off;
-		USART1_VoidWriteString((u8 *)"*Echo Off#");
+		USART1_VoidWriteString((u8 *)"*EO#");
 	}
 
 	MEXTI_voidClearPendingFlag(6);
@@ -461,7 +461,7 @@ void CheckSwitchState()
         {
             Global_u8BulletState = HEAT_FLAG;
             Global_u8BulletsOn = 1;
-            USART1_VoidWriteString((u8 *)"*High Exp#");
+            USART1_VoidWriteString((u8 *)"*HE#");
             Current_LED_Bullet = High_Exp;
             Control_Panelvoid_Message_For_LED(HIGH_EXP);
             Global_u8Bullets_Flag = 0;
@@ -469,7 +469,7 @@ void CheckSwitchState()
         else if((Global_u16SwitchsData & 0x1F) == 0x02 && Global_u8BulletState == HEAT_FLAG && Global_u8BulletsOn == 0)
         {
             Global_u8BulletState = SABOT_FLAG;
-            USART1_VoidWriteString((u8 *)"*Heat#");
+            USART1_VoidWriteString((u8 *)"*HT#");
             Current_LED_Bullet = Heat;
             Control_Panelvoid_Message_For_LED(HEAT);
             Global_u8Bullets_Flag = 0;
@@ -478,7 +478,7 @@ void CheckSwitchState()
         else if((Global_u16SwitchsData & 0x1F) == 0x04 && Global_u8BulletState == SABOT_FLAG && Global_u8BulletsOn == 0)
         {
             Global_u8BulletState = HEAT_FLAG;
-            USART1_VoidWriteString((u8 *)"*Sabot#");
+            USART1_VoidWriteString((u8 *)"*ST#");
             Current_LED_Bullet = Sabot;
             Control_Panelvoid_Message_For_LED(SABOT);
             Global_u8Bullets_Flag = 0;
@@ -487,7 +487,7 @@ void CheckSwitchState()
         else if((Global_u16SwitchsData & 0x1F) == 0x08 && Global_u8BulletState == HEP_FLAG && Global_u8BulletsOn == 0)
         {
             Global_u8BulletState = COAXIAL_GUN_FLAG;
-            USART1_VoidWriteString((u8 *)"*Sub Caliber#");
+            USART1_VoidWriteString((u8 *)"*SC#");
             Global_u8Bullets_Flag = 0;
             Current_LED_Bullet = Hep;
             Control_Panelvoid_Message_For_LED(HEP);
@@ -497,7 +497,7 @@ void CheckSwitchState()
         {
             Global_u8BulletState = HEP_FLAG;
             Global_u8Bullets_Flag = 1;
-            USART1_VoidWriteString((u8 *)"*Coaxial Gun#");
+            USART1_VoidWriteString((u8 *)"*CG#");
             Current_LED_Bullet = Coaxial;
             Control_Panelvoid_Message_For_LED(Coaxial_GUN);
             Global_u8BulletsOn = 1;
