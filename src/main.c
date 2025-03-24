@@ -46,11 +46,13 @@ u8 Global_u8SentenceIsTaken=0;
 u8 Global_u8StartThePanel=0;
 u8 Global_u8BulletsOn=0;
 u8 Global_u8BulletCounter=0;
+u8 Global_u8Counter=0;
 
 enum Status Current_LED_Echo; // Enum Object to Store the Echo status used in Lightening the corresponding LED at startup
 enum Status Current_LED_Bullet;// Enum Object to Store the Bullet status used in Lightening the corresponding LED at startup
 
 static u16 Previous_u16SwitchsData = 0xFFFF;  // Store previous state
+u8 Executed_Flag = 0;  // Flag to track execution
 
 void main()
 {
@@ -449,58 +451,83 @@ void INT_HEP_COAXIAL_GUN(void)
 
 void CheckSwitchState()
 {
-    if (Previous_u16SwitchsData != Global_u16SwitchsData)  // Only process changes
-    {
-        Previous_u16SwitchsData = Global_u16SwitchsData;  // Update previous state
+	if (Previous_u16SwitchsData != Global_u16SwitchsData)  // Only process changes
+	{
+		Previous_u16SwitchsData = Global_u16SwitchsData;  // Update previous state
 
-        if((Global_u16SwitchsData & 0x1F) == 0 && Global_u8BulletsOn == 1) // No switch pressed
-        {
-            Global_u8BulletsOn = 0;
-        }
-        else if((Global_u16SwitchsData & 0x1F) == 0x01 && Global_u8BulletState == HIGH_EXPO_FLAG && Global_u8BulletsOn == 0)
-        {
-            Global_u8BulletState = HEAT_FLAG;
-            Global_u8BulletsOn = 1;
-            USART1_VoidWriteString((u8 *)"*HE#");
-            Current_LED_Bullet = High_Exp;
-            Control_Panelvoid_Message_For_LED(HIGH_EXP);
-            Global_u8Bullets_Flag = 0;
-        }
-        else if((Global_u16SwitchsData & 0x1F) == 0x02 && Global_u8BulletState == HEAT_FLAG && Global_u8BulletsOn == 0)
-        {
-            Global_u8BulletState = SABOT_FLAG;
-            USART1_VoidWriteString((u8 *)"*HT#");
-            Current_LED_Bullet = Heat;
-            Control_Panelvoid_Message_For_LED(HEAT);
-            Global_u8Bullets_Flag = 0;
-            Global_u8BulletsOn = 1;
-        }
-        else if((Global_u16SwitchsData & 0x1F) == 0x04 && Global_u8BulletState == SABOT_FLAG && Global_u8BulletsOn == 0)
-        {
-            Global_u8BulletState = HEAT_FLAG;
-            USART1_VoidWriteString((u8 *)"*ST#");
-            Current_LED_Bullet = Sabot;
-            Control_Panelvoid_Message_For_LED(SABOT);
-            Global_u8Bullets_Flag = 0;
-            Global_u8BulletsOn = 1;
-        }
-        else if((Global_u16SwitchsData & 0x1F) == 0x08 && Global_u8BulletState == HEP_FLAG && Global_u8BulletsOn == 0)
-        {
-            Global_u8BulletState = COAXIAL_GUN_FLAG;
-            USART1_VoidWriteString((u8 *)"*SC#");
-            Global_u8Bullets_Flag = 0;
-            Current_LED_Bullet = Hep;
-            Control_Panelvoid_Message_For_LED(HEP);
-            Global_u8BulletsOn = 1;
-        }
-        else if((Global_u16SwitchsData & 0x1F) == 0x10 && Global_u8BulletState == COAXIAL_GUN_FLAG && Global_u8BulletsOn == 0)
-        {
-            Global_u8BulletState = HEP_FLAG;
-            Global_u8Bullets_Flag = 1;
-            USART1_VoidWriteString((u8 *)"*CG#");
-            Current_LED_Bullet = Coaxial;
-            Control_Panelvoid_Message_For_LED(Coaxial_GUN);
-            Global_u8BulletsOn = 1;
-        }
-    }
+
+		if((Global_u16SwitchsData & 0x1F) == 0 && Global_u8BulletsOn == 1) // No switch pressed
+		{
+			Global_u8BulletsOn = 0;
+			Global_u8Counter=0;
+		}
+		else if((Global_u16SwitchsData & 0x1F) == 0x01 && Global_u8BulletState == HIGH_EXPO_FLAG && Global_u8BulletsOn == 0)
+		{
+			Executed_Flag=0;
+			Global_u8BulletState = HEAT_FLAG;
+			Global_u8BulletsOn = 1;
+			Current_LED_Bullet = High_Exp;
+			Control_Panelvoid_Message_For_LED(HIGH_EXP);
+			Global_u8Bullets_Flag = 0;
+		}
+		else if((Global_u16SwitchsData & 0x1F) == 0x02 && Global_u8BulletState == HEAT_FLAG && Global_u8BulletsOn == 0)
+		{
+			Executed_Flag=0;
+			Global_u8BulletState = SABOT_FLAG;
+			Current_LED_Bullet = Heat;
+			Control_Panelvoid_Message_For_LED(HEAT);
+			Global_u8Bullets_Flag = 0;
+			Global_u8BulletsOn = 1;
+		}
+		else if((Global_u16SwitchsData & 0x1F) == 0x04 && Global_u8BulletState == SABOT_FLAG && Global_u8BulletsOn == 0)
+		{
+			Executed_Flag=0;
+			Global_u8BulletState = HEAT_FLAG;
+			Current_LED_Bullet = Sabot;
+			Control_Panelvoid_Message_For_LED(SABOT);
+			Global_u8Bullets_Flag = 0;
+			Global_u8BulletsOn = 1;
+		}
+		else if((Global_u16SwitchsData & 0x1F) == 0x08 && Global_u8BulletState == HEP_FLAG && Global_u8BulletsOn == 0)
+		{
+			Executed_Flag=0;
+			Global_u8BulletState = COAXIAL_GUN_FLAG;
+			Global_u8Bullets_Flag = 0;
+			Current_LED_Bullet = Hep;
+			Control_Panelvoid_Message_For_LED(HEP);
+			Global_u8BulletsOn = 1;
+		}
+		else if((Global_u16SwitchsData & 0x1F) == 0x10 && Global_u8BulletState == COAXIAL_GUN_FLAG && Global_u8BulletsOn == 0)
+		{
+			Executed_Flag=0;
+			Global_u8BulletState = HEP_FLAG;
+			Global_u8Bullets_Flag = 1;
+			Current_LED_Bullet = Coaxial;
+			Control_Panelvoid_Message_For_LED(Coaxial_GUN);
+			Global_u8BulletsOn = 1;
+		}
+	}
+	else
+	{
+		Global_u8Counter++;
+	}
+
+
+
+	if(Global_u8Counter==15 && Executed_Flag == 0)
+	{
+		switch(Current_LED_Bullet)
+		{
+		case Coaxial:USART1_VoidWriteString((u8 *)"*CG#");break;
+		case Hep: USART1_VoidWriteString((u8 *)"*SC#");break;
+		case Sabot:USART1_VoidWriteString((u8 *)"*ST#");break;
+		case Heat: USART1_VoidWriteString((u8 *)"*HT#");break;
+		case High_Exp: USART1_VoidWriteString((u8 *)"*HE#");break;
+		}
+
+		Executed_Flag = 1;  // Set flag to prevent re-execution
+	}
+
+
+
 }

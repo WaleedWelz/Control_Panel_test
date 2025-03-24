@@ -93,7 +93,8 @@ enum Status
 	High_Exp,
 	Nfov,
 	Mfov,
-	Wfov
+	Wfov,
+	NOM
 
 };
 

@@ -30,6 +30,7 @@ extern enum Status Current_LED_Echo;
 extern enum Status Current_LED_Bullet;
 extern u8 Global_u8Bullets_Flag;
 extern u8 Global_u8BulletsOn;
+extern u8 Executed_Flag;
 /*
  * Breif : This Function is Initializing The Control Panel pins.
  * Parameters :  Nothing
@@ -266,12 +267,8 @@ void resetLamps(void)
 
 void Control_Panel_voidStartUpLeds(void)
 {
-
-
 	Global_u8BulletsOn=0;
-
-
-
+	Executed_Flag=1;
 
 	if(MGPIO_u8GetPinValue(PORTA,PIN15) == 1)
 	{
@@ -328,6 +325,7 @@ void Control_Panel_voidStartUpLeds(void)
 	}
 
 	u16 Data=ShiftRegister_u16GetData();
+
 		for(u8 i=0;i<5;i++)
 		{
 			if(GET_BIT(Data,i)==1)
@@ -368,6 +366,7 @@ void Control_Panel_voidStartUpLeds(void)
 }
 
 
+
 u16 ShiftRegister_u16GetData(void)
 {
 	u16 Data = 0;
@@ -393,6 +392,35 @@ u16 ShiftRegister_u16GetData(void)
 
 	return Data;
 }
+
+/*
+
+
+u16 ShiftRegister_u16GetData(void)
+{
+    u16 Data = 0;
+
+    // Load parallel data into the shift register
+    MGPIO_voidSetPinValue(PORTA, SH_LD_PIN, LOW);
+    delay_voidXms(1);  // Use minimal required delay
+    MGPIO_voidSetPinValue(PORTA, SH_LD_PIN, HIGH);
+
+    // Read serial data (LSB first)
+    for (u8 i = 0; i < 8; i++)
+    {
+        Data |= (MGPIO_u8GetPinValue(PORTA, QH_PIN) << i); // Read data and shift it accordingly
+
+        MGPIO_voidSetPinValue(PORTA, CLK_PIN, HIGH); // Pulse clock after reading
+        delay_voidXms(1);
+        MGPIO_voidSetPinValue(PORTA, CLK_PIN, LOW);
+    }
+
+    MGPIO_voidSetPinValue(PORTA, CLK_PIN, LOW); // Ensure clock is LOW after operation
+
+    return Data;
+}
+*/
+
 
 
 void DataEntry_VoidWriteStringAndNumbers(u8 *Copy_u8StringToBeSent,u32 Copy_u32RealNumber)
