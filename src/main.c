@@ -105,7 +105,6 @@ void main()
 	MEXTINT15_10_VidSetCallBack(&INT_DAY_THERMAL);
 
 
-
 	while(1)
 	{
 
@@ -150,7 +149,6 @@ void main()
 
 			Control_Panel_voidStartUpLeds(); // Know which Switch position was selected and Light the corresponding LED
 
-
 			Global_u8StartThePanel=1;
 			Global_u8StartCounter = 0;
 
@@ -189,12 +187,6 @@ void main()
 				USART1_VoidWriteString((u8 *)"*E-#");
 				delay_voidXms(500);
 			}
-
-			if(MGPIO_u8GetPinValue(PORTB,1) == 1)
-			{
-				USART1_VoidWriteString((u8 *)"*LRFF#");
-				delay_voidXms(500);
-			}
 			if(MGPIO_u8GetPinValue(PORTA,8) == 1)
 			{
 				USART1_VoidWriteString((u8 *)"*C+#");
@@ -230,7 +222,11 @@ void main()
 
 				delay_voidXms(500);
 			}
-
+			if(MGPIO_u8GetPinValue(PORTB,1) == 1)
+			{
+				USART1_VoidWriteString((u8 *)"*LRFF#");
+				delay_voidXms(500);
+			}
 
 			if(MGPIO_u8GetPinValue(PORTB, 12) == 1 && Global_u8Lamp_test_Status_Flag==0)// Remain the recent ON LEDs... Lamp test button is pressed
 			{

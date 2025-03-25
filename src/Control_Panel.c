@@ -81,8 +81,10 @@ void Control_Panelvoid_Init(void)
 	/* Initialize PORTB as OUTPUT PUSHPULL
 	 *   pins */
 
+
 	MGPIO_voidSetPinDirection(PORTB,PIN0,INPUT_PULLUP_DOWN);
 	MGPIO_voidSetPinDirection(PORTB,PIN1,INPUT_PULLUP_DOWN);
+
 	MGPIO_voidSetPinDirection(PORTB,PIN8,INPUT_PULLUP_DOWN);
 
 	MGPIO_voidSetPinValue(PORTB,PIN0,LOW);
