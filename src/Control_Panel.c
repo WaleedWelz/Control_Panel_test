@@ -32,6 +32,8 @@ extern enum Status Current_LED_Bullet;
 extern u8 Global_u8Bullets_Flag;
 extern u8 Global_u8BulletsOn;
 extern u8 Executed_Flag;
+
+u8 Global_u8FirstBullet=0;
 /*
  * Breif : This Function is Initializing The Control Panel pins.
  * Parameters :  Nothing
@@ -273,6 +275,7 @@ void Control_Panel_voidStartUpLeds(void)
 {
 	Global_u8BulletsOn=0;
 	Executed_Flag=1;
+	Global_u8FirstBullet=1;
 
 	//Loop to Check the last status of Switches before startup
 	for (u8 i = 6; i <=7; i++)

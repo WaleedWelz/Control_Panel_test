@@ -62,6 +62,7 @@ enum Status LastBullet=	NOM;
 u8 Global_TimerEnteredOnce=0;
 u8 Executed_Flag = 0;  // Flag to track execution
 
+extern Global_u8FirstBullet;
 
 void main()
 {
@@ -501,6 +502,7 @@ void CheckSwitchState(void)
 		Current_LED_Bullet=High_Exp;
 		Control_Panelvoid_Message_For_LED(HIGH_EXP);
 		Global_u8Bullets_Flag=0;
+		Global_u8FirstBullet=0;
 	}
 
 	if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==1  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==0 && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletState==HEAT_FLAG)
@@ -512,6 +514,7 @@ void CheckSwitchState(void)
 		Control_Panelvoid_Message_For_LED(HEAT);
 		Global_u8Bullets_Flag=0;
 		Global_u8BulletsOn=1;
+		Global_u8FirstBullet=0;
 
 	}
 	if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==1  && GET_BIT(Global_u16SwitchsData,3)==0  && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletState==SABOT_FLAG)
@@ -524,6 +527,7 @@ void CheckSwitchState(void)
 		Control_Panelvoid_Message_For_LED(SABOT);
 		Global_u8Bullets_Flag=0;
 		Global_u8BulletsOn=1;
+		Global_u8FirstBullet=0;
 
 	}
 	if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==1  && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletState==HEP_FLAG)
@@ -536,6 +540,7 @@ void CheckSwitchState(void)
 		Current_LED_Bullet=Hep;
 		Control_Panelvoid_Message_For_LED(HEP);
 		Global_u8BulletsOn=1;
+		Global_u8FirstBullet=0;
 
 	}
 	if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==0  && GET_BIT(Global_u16SwitchsData,4)==1 && Global_u8BulletState==COAXIAL_GUN_FLAG )
@@ -547,15 +552,14 @@ void CheckSwitchState(void)
 		Current_LED_Bullet=Coaxial;
 		Control_Panelvoid_Message_For_LED(Coaxial_GUN);
 		Global_u8BulletsOn=1;
+		Global_u8FirstBullet=0;
 	}
-
-
 	if(LastBullet!=Current_LED_Bullet)
 	{
 		Global_u8BulletsEnteredOnce=0;
 	}
 
-	if(current_time>=1500 && Global_u8BulletsEnteredOnce==0)
+	if(current_time>=1500 && Global_u8BulletsEnteredOnce==0 && Global_u8FirstBullet==0)
 	{
 		Global_TimerEnteredOnce=0;
 		Global_u8BulletsEnteredOnce=1;
