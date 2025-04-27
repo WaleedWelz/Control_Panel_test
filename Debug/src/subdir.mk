@@ -11,6 +11,7 @@ C_SRCS += \
 ../src/RCC_program.c \
 ../src/SYS_program.c \
 ../src/Timer.c \
+../src/Timer2_StopWatch.c \
 ../src/UART_program.c \
 ../src/_write.c \
 ../src/main.c 
@@ -23,6 +24,7 @@ OBJS += \
 ./src/RCC_program.o \
 ./src/SYS_program.o \
 ./src/Timer.o \
+./src/Timer2_StopWatch.o \
 ./src/UART_program.o \
 ./src/_write.o \
 ./src/main.o 
@@ -35,6 +37,7 @@ C_DEPS += \
 ./src/RCC_program.d \
 ./src/SYS_program.d \
 ./src/Timer.d \
+./src/Timer2_StopWatch.d \
 ./src/UART_program.d \
 ./src/_write.d \
 ./src/main.d 
