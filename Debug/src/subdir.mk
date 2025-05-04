@@ -9,9 +9,11 @@ C_SRCS += \
 ../src/GPIO_program.c \
 ../src/NVIC_program.c \
 ../src/RCC_program.c \
+../src/Reset.c \
 ../src/SYS_program.c \
 ../src/Timer.c \
 ../src/Timer2_StopWatch.c \
+../src/Timer3_StopWatch.c \
 ../src/UART_program.c \
 ../src/_write.c \
 ../src/main.c 
@@ -22,9 +24,11 @@ OBJS += \
 ./src/GPIO_program.o \
 ./src/NVIC_program.o \
 ./src/RCC_program.o \
+./src/Reset.o \
 ./src/SYS_program.o \
 ./src/Timer.o \
 ./src/Timer2_StopWatch.o \
+./src/Timer3_StopWatch.o \
 ./src/UART_program.o \
 ./src/_write.o \
 ./src/main.o 
@@ -35,9 +39,11 @@ C_DEPS += \
 ./src/GPIO_program.d \
 ./src/NVIC_program.d \
 ./src/RCC_program.d \
+./src/Reset.d \
 ./src/SYS_program.d \
 ./src/Timer.d \
 ./src/Timer2_StopWatch.d \
+./src/Timer3_StopWatch.d \
 ./src/UART_program.d \
 ./src/_write.d \
 ./src/main.d 

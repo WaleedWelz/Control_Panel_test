@@ -291,27 +291,15 @@ u8 USART1_ReceiveByteNonBlocking(u8 *data)
     }
     return 0; // No data available
 }
-
-u8* USART1_u8ReadString_NonBlocking()
+// Returns the received character if available, otherwise returns 0 (or NULL)
+u8 USART1_u8ReadChar_NonBlocking()
 {
-    static u8 receivedString[50]={0}; // Buffer
-    static u8 i = 0; // Keep track of index across calls
     u8 receivedByte;
 
-    // Read available bytes one by one
     if (USART1_ReceiveByteNonBlocking(&receivedByte))
     {
-        if (receivedByte == '\n' || receivedByte == '\r') // Stop on Enter
-        {
-            receivedString[i] = '\0'; // Null-terminate string
-            i = 0; // Reset index for next message
-            return receivedString; // Return completed string
-        }
-        else if (i < sizeof(receivedString) - 1) // Prevent buffer overflow
-        {
-            receivedString[i++] = receivedByte;
-        }
+        return receivedByte; // Return the received byte
     }
 
-    return NULL; // Return NULL if the string is not complete
+    return 0; // No data available
 }

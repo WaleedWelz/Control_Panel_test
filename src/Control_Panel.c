@@ -319,17 +319,9 @@ void Control_Panel_voidStartUpLeds(void)
 	}
 	if(MGPIO_u8GetPinValue(PORTB, PIN0) == 1)
 	{
-		if(Global_u8Day_Thermal_Flag==0)
-		{
 			Global_u8FVState=MFV_FLAG;
 			Global_u8FV_Status_Flag=1;
 			USART1_VoidWriteString((u8 *)"F,");Control_Panelvoid_Message_For_LED(NFOV);Current_LED_FOV=Nfov;
-		}
-		else if(Global_u8Day_Thermal_Flag==1)
-		{
-			Global_u8FVState=MFV_FLAG;
-			Global_u8FV_Status_Flag=1;
-		}
 	}
 
 	if (MGPIO_u8GetPinValue(PORTA, 5) == 1) //Check if the Switch is selected

@@ -26,7 +26,7 @@ void TIM2_voidInit(void)
 	TIM2->PSC = 7200 - 1;     // 10kHz
 	TIM2->ARR = 10 - 1;       // 1ms ticks
 	TIM2->CNT = 0;
-	TIM2->CR1 |= TIM_CR1_CEN;  // Enable timer
+	//TIM2->CR1 |= TIM_CR1_CEN;  // Enable timer
 
 	TIM2->DIER |= TIM_DIER_UIE; // Enable update interrupt
 	NVIC_EnableIRQ(TIM2_IRQn);  // Enable TIM2 interrupt in NVIC

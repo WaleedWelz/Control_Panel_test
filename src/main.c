@@ -14,6 +14,8 @@
 #include "SYS_config.h"
 
 #include "Timer2_StopWatch.h"
+#include "Timer3_StopWatch.h"
+#include "Reset.h"
 
 /* Functions used in Interrupts call back */
 void INT_NFOV(void);
@@ -39,9 +41,10 @@ u8 Global_u8FV_Status_Flag=0; // Flag used to detect NFOV status when the two FO
 u8 Global_u8Bullets_Flag=0;
 u8 Global_u8WideFlag=0;
 u8 Global_u8StartCounter=0; // Counter to detect the correct start message
+u8 Global_u8ResetCounter=0;
 u8 Global_u8Sabot2=0;
 u8 HEP_PINStatus=0;
-u8 *Global_u8StartCommand=NULL; // Pointer for the returned string from the UART function
+u8 Global_u8StartCommand=0; // Pointer for the returned string from the UART function
 u8 Global_u8CounterForReentrant=0;
 u8 Coaxial_FlagIndicator=0;
 u8 cnt=0;
@@ -60,8 +63,10 @@ enum Status Current_LED_FOV;
 enum Status Current_LED_Bullet;// Enum Object to Store the Bullet status used in Lightening the corresponding LED at startup
 enum Status LastBullet=	NOM;
 u8 Global_TimerEnteredOnce=0;
+u8 Global_Timer3EnteredOnce=0;
 u8 Executed_Flag = 0;  // Flag to track execution
-
+u32 current_time=0;
+u32 current_time3=0;
 extern Global_u8FirstBullet;
 
 void main()
@@ -78,6 +83,7 @@ void main()
 	Sys_VoidInit(TimerMode); //  Enabling Timer
 	USART_Init(); // Initializing UART
 	TIM2_voidInit();
+	TIM3_Init();
 
 
 
@@ -86,8 +92,11 @@ void main()
 	Control_Panelvoid_Init(); // Initializing each pin's Mode and interrupts levels
 
 
-	u8 arr_start[]="Start"; // The received Startup message
+	/*
+	u8 arr_start[]="S"; // The received Startup message
+	u8 arr_Reset[]="R";
 
+	 */
 
 	/*
 	MEXTI_voidEnable(EXTI_PORTA,PIN1,RISING_EDGE); //
@@ -119,7 +128,8 @@ void main()
 	{
 
 
-		Global_u8StartCommand=USART1_u8ReadString_NonBlocking(); // Pointing to the received string
+		Global_u8StartCommand=USART1_u8ReadChar_NonBlocking(); // Pointing to the received string
+		/*
 
 		if (Global_u8StartCommand[0] != NULL) // Ensure a new string is received
 		{
@@ -139,15 +149,31 @@ void main()
 			}
 		}
 
-		if(Global_u8StartCounter==STARTUP_MESSAGE_LETTERS_NUMBER)
+		 */
+
+		if (Global_u8StartCommand!= 0) // Ensure a new string is received
 		{
-			USART1_VoidWriteString((u8*)"*S,");
 
-			Control_Panel_voidStartUpLeds(); // Know which Switch position was selected and Light the corresponding LED
+			if(Global_u8StartCommand== 'R')
+			{
+				software_reset();
+			}
+		}
 
-			Global_u8StartThePanel=1;
-			Global_u8StartCounter = 0;
 
+
+		if (Global_u8StartCommand!= 0) // Ensure a new string is received
+		{
+			if(Global_u8StartCommand =='S')
+			{
+				USART1_VoidWriteString((u8*)"*S,");
+
+				Control_Panel_voidStartUpLeds(); // Know which Switch position was selected and Light the corresponding LED
+
+				Global_u8StartThePanel=1;
+				Global_u8StartCounter = 0;
+
+			}
 		}
 
 		/*	if(MGPIO_u8GetPinValue(PORTB,8) == 1)
@@ -213,7 +239,7 @@ void main()
 
 			if(MGPIO_u8GetPinValue(PORTB,13) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*CLR#");
+				USART1_VoidWriteString((u8 *)"*TAF#");
 
 				delay_voidXms(500);
 			}
@@ -237,7 +263,7 @@ void main()
 			}
 			if(MGPIO_u8GetPinValue(PORTB,1) == 1)
 			{
-				USART1_VoidWriteString((u8 *)"*LRFF#");
+				USART1_VoidWriteString((u8 *)"*CLR#");
 				delay_voidXms(500);
 			}
 
@@ -287,36 +313,43 @@ void main()
 				USART1_VoidWriteString((u8 *)"*FE#");
 				Current_LED_Echo=First_Echo;
 			}
-			if(MGPIO_u8GetPinValue(PORTB,0) == 0 && MGPIO_u8GetPinValue(PORTA,5) == 0 && Global_u8FV_Status_Flag==1 && Global_u8FVState==MFV_FLAG)
+			if(MGPIO_u8GetPinValue(PORTB,0) == 0 && MGPIO_u8GetPinValue(PORTA,5) == 0 && Global_u8FVState==MFV_FLAG)
 			{
 				Global_u8FV_Status_Flag=0;
-				Global_u8FVState=NFV_FLAG;
 				Control_Panelvoid_Message_For_LED(MFOV);
-				USART1_VoidWriteString((u8 *)"*N#");
 				Current_LED_FOV=Mfov;
+				Global_u8FVState=NFV_FLAG;
+				USART1_VoidWriteString((u8 *)"*N#");
+
 			}
 
 
+			if(Global_u8FVState==MFV_FLAG)
+			{
+				Global_u8WideFlag=0;
+			}
 
-
-
-			if( MGPIO_u8GetPinValue(PORTA,PIN5)==1 && Global_u8WideFlag == 0) {
+			if( MGPIO_u8GetPinValue(PORTA,PIN5)==1 && Global_u8WideFlag == 0)
+			{
 
 				if(Global_u8FVState==WFV_FLAG)
 				{
-					Global_u8FVState=MFV_FLAG;
-					Global_u8WideFlag=1;
 					Global_u8FV_Status_Flag=1;
-					USART1_VoidWriteString((u8 *)"*W#");
+
 					Control_Panelvoid_Message_For_LED(WFOV);
 					Current_LED_FOV=Wfov;
+					Global_u8FVState=MFV_FLAG;
+					USART1_VoidWriteString((u8 *)"*W#");
+					current_time3=0;
+					Global_u8WideFlag=1;
 				}
-
 			}
+
 			else if ( MGPIO_u8GetPinValue(PORTA,PIN5)==0 && Global_u8WideFlag == 1 ) {
 
 				Global_u8WideFlag=0;
 			}
+
 
 
 			Global_u16SwitchsData=ShiftRegister_u16GetData();
@@ -335,6 +368,12 @@ void main()
 
 				}
 			}
+
+			if(GET_BIT(Global_u16SwitchsData,6)==1)
+			{
+				USART1_VoidWriteString((u8 *)"*LRFF#");
+				delay_voidXms(500);
+			}
 			if(GET_BIT(Global_u16SwitchsData,5)==1)
 			{
 				USART1_VoidWriteString((u8 *)"*LL#");
@@ -344,6 +383,7 @@ void main()
 		}
 	}
 }
+
 
 
 
@@ -362,7 +402,7 @@ void INT_DAY_THERMAL(void){
 		Global_u8DTStateFlag=0;
 
 
-		if(Global_u8F_T==1)
+		/*if(Global_u8F_T==1)
 		{
 			Global_u8FVState=MFV_FLAG;
 			Global_u8FV_Status_Flag=1;
@@ -370,7 +410,7 @@ void INT_DAY_THERMAL(void){
 			Current_LED_FOV=Nfov;
 			Control_Panelvoid_Message_For_LED(NFOV);
 			Global_u8F_T=0;
-		}
+		}*/
 	}
 	else if(Local_u8Pin1_value==0 && Global_u8DTStateFlag==0)
 	{
@@ -389,24 +429,17 @@ void INT_DAY_THERMAL(void){
 void INT_NFOV(void)
 {
 
-	Global_u8F_T=1;
+	Control_Panelvoid_Message_For_LED(NFOV);
 
-	if(Global_u8Day_Thermal_Flag==0)
+	if(Global_u8FVState==NFV_FLAG)
 	{
-		if(Global_u8FVState==NFV_FLAG)
-		{
-			Global_u8FVState=MFV_FLAG;
-			Global_u8FV_Status_Flag=1;
-			USART1_VoidWriteString((u8 *)"*F#");
-			Current_LED_FOV=Nfov;
-			Control_Panelvoid_Message_For_LED(NFOV);
-		}
-	}
-	else if(Global_u8Day_Thermal_Flag==1)
-	{
+		delay_voidXms(100);
 		Global_u8FVState=MFV_FLAG;
-		Global_u8FV_Status_Flag=1;
+		//Global_u8FV_Status_Flag=1;
+		USART1_VoidWriteString((u8 *)"*F#");
+		Current_LED_FOV=Nfov;
 	}
+
 	MEXTI_voidClearPendingFlag(0);
 }
 
@@ -482,12 +515,13 @@ void CheckSwitchState(void)
 {
 	if(Global_TimerEnteredOnce==0)
 	{
+		TIM2_voidReset();
 		TIM2_voidStart();
 		Global_TimerEnteredOnce=1;
 		LastBullet=Current_LED_Bullet;
 	}
 	// static u32 last_change_time = 0;
-	u32 current_time = TIM2_u32GetTime();
+	current_time = TIM2_u32GetTime();
 
 	/*if(GET_BIT(Global_u16SwitchsData,0)==0  && GET_BIT(Global_u16SwitchsData,1)==0  && GET_BIT(Global_u16SwitchsData,2)==0  && GET_BIT(Global_u16SwitchsData,3)==0 && GET_BIT(Global_u16SwitchsData,4)==0 && Global_u8BulletsOn==1 )
 	{
@@ -563,6 +597,7 @@ void CheckSwitchState(void)
 	{
 		Global_TimerEnteredOnce=0;
 		Global_u8BulletsEnteredOnce=1;
+		TIM2_voidStop();
 		TIM2_voidReset();
 
 		switch (Current_LED_Bullet)
