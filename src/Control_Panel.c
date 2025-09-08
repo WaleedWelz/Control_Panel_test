@@ -49,10 +49,9 @@ void Control_Panelvoid_Init(void)
 	MGPIO_voidSetPinDirection(PORTA,4,INPUT_PULLUP_DOWN);
 
 
-	MGPIO_voidSetPinDirection(PORTA,6,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinDirection(PORTA,7,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTA,PIN6,LOW);
-	MGPIO_voidSetPinValue(PORTA,PIN7,LOW);
+	MGPIO_voidSetPinDirection(PORTA,6,INPUT_FLOATING);
+	MGPIO_voidSetPinDirection(PORTA,7,INPUT_FLOATING);
+
 
 	MGPIO_voidSetPinDirection(PORTA,PIN2,OUTPUT_10MHZ_PUSHPULL);
 	MGPIO_voidSetPinDirection(PORTA,PIN3,OUTPUT_10MHZ_PUSHPULL);
@@ -60,24 +59,18 @@ void Control_Panelvoid_Init(void)
 	MGPIO_voidSetPinDirection(PORTA,PIN12,OUTPUT_10MHZ_PUSHPULL); // EXPOSURE+
 
 	MGPIO_voidSetPinDirection(PORTA,PIN0,OUTPUT_10MHZ_PUSHPULL); // First Echo LED
-	MGPIO_voidSetPinDirection(PORTA,PIN5,INPUT_PULLUP_DOWN); // First Echo LED
-	MGPIO_voidSetPinDirection(PORTA,PIN8,INPUT_PULLUP_DOWN); // Contrast+
-	MGPIO_voidSetPinDirection(PORTA,PIN11,INPUT_PULLUP_DOWN); // BRIGHT+
-	MGPIO_voidSetPinDirection(PORTA,PIN15,INPUT_PULLUP_DOWN); // FULL SCREEN
-
-	MGPIO_voidSetPinValue(PORTA,PIN0,LOW);
-	MGPIO_voidSetPinValue(PORTA,PIN5,LOW);
-	MGPIO_voidSetPinValue(PORTA,PIN8,LOW);
-	MGPIO_voidSetPinValue(PORTA,PIN11,LOW);
-	MGPIO_voidSetPinValue(PORTA,PIN15,LOW);
+	MGPIO_voidSetPinDirection(PORTA,PIN5,INPUT_FLOATING); // First Echo LED
+	MGPIO_voidSetPinDirection(PORTA,PIN8,INPUT_FLOATING); // Contrast+
+	MGPIO_voidSetPinDirection(PORTA,PIN11,INPUT_FLOATING); // BRIGHT+
+	MGPIO_voidSetPinDirection(PORTA,PIN15,INPUT_FLOATING); // FULL SCREEN
 
 	MGPIO_voidSetPinDirection(PORTB,PIN3,OUTPUT_10MHZ_PUSHPULL); // SABOT LED
-	//MGPIO_voidSetPinDirection(PORTB,PIN8,OUTPUT_10MHZ_PUSHPULL); // Last Echo LED
 	MGPIO_voidSetPinDirection(PORTB,PIN9,OUTPUT_10MHZ_PUSHPULL); // Last Echo LED
 
 
-	MGPIO_voidSetPinDirection(PORTC,PIN13,INPUT_PULLUP_DOWN);// HEAT LED
-	MGPIO_voidSetPinValue(PORTC,PIN13,HIGH);
+	MGPIO_voidSetPinDirection(PORTC,PIN13,INPUT_FLOATING);// HEAT LED
+	//MGPIO_voidSetPinValue(PORTC,PIN13,HIGH);
+
 	MGPIO_voidSetPinDirection(PORTC,PIN14,OUTPUT_10MHZ_PUSHPULL); // HEP LED
 	MGPIO_voidSetPinDirection(PORTC,PIN15,OUTPUT_10MHZ_PUSHPULL); // HIGH EXPO. LED
 
@@ -86,43 +79,39 @@ void Control_Panelvoid_Init(void)
 	 *   pins */
 
 
-	MGPIO_voidSetPinDirection(PORTB,PIN0,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinDirection(PORTB,PIN1,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinDirection(PORTB,PIN0,INPUT_FLOATING);
+	MGPIO_voidSetPinDirection(PORTB,PIN1,INPUT_FLOATING);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN8,INPUT_PULLUP_DOWN);
+	MGPIO_voidSetPinDirection(PORTB,PIN8,INPUT_FLOATING);
 
-	MGPIO_voidSetPinValue(PORTB,PIN0,LOW);
-	MGPIO_voidSetPinValue(PORTB,PIN1,LOW);
-	MGPIO_voidSetPinValue(PORTB,PIN8,LOW);
 
 
 
 	MGPIO_voidSetPinDirection(PORTB,PIN5,OUTPUT_10MHZ_PUSHPULL);
 
 
-	MGPIO_voidSetPinDirection(PORTB,PIN4,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN4,LOW);
+	MGPIO_voidSetPinDirection(PORTB,PIN4,INPUT_FLOATING);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN6,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN6,LOW);
+	MGPIO_voidSetPinDirection(PORTB,PIN6,INPUT_FLOATING);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN7,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN7,LOW);
+
+	MGPIO_voidSetPinDirection(PORTB,PIN7,INPUT_FLOATING);
+
 
 	MGPIO_voidSetPinDirection(PORTB,PIN10,OUTPUT_10MHZ_PUSHPULL);
 
 
-	MGPIO_voidSetPinDirection(PORTB,PIN11,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN11,LOW);
+	MGPIO_voidSetPinDirection(PORTB,PIN11,INPUT_FLOATING);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN12,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN12,LOW);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN13,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN13,LOW);
+	MGPIO_voidSetPinDirection(PORTB,PIN12,INPUT_FLOATING);
 
-	MGPIO_voidSetPinDirection(PORTB,PIN14,INPUT_PULLUP_DOWN);
-	MGPIO_voidSetPinValue(PORTB,PIN14,LOW);
+
+	MGPIO_voidSetPinDirection(PORTB,PIN13,INPUT_FLOATING);
+
+
+	MGPIO_voidSetPinDirection(PORTB,PIN14,INPUT_FLOATING);
+
 
 
 	MGPIO_voidSetPinDirection(PORTB,PIN15,OUTPUT_10MHZ_PUSHPULL);
@@ -304,12 +293,6 @@ void Control_Panel_voidStartUpLeds(void)
 	{
 		USART1_VoidWriteString((u8 *)"D,");Global_u8Day_Thermal_Flag=1;Global_u8DTStateFlag=1;
 	}
-	//	if(MGPIO_u8GetPinValue(PORTA,PIN1)==0 && MGPIO_u8GetPinValue(PORTA,PIN2)==0 && MGPIO_u8GetPinValue(PORTA,PIN3)==0 && MGPIO_u8GetPinValue(PORTA,PIN4)==0)
-	//	{
-	//		Global_u8Bullets_Flag=1;
-	//		Control_Panelvoid_Message_For_LED(Coaxial_GUN);Current_LED_Bullet=Coaxial;Global_u8BulletState=COAXIAL_GUN_FLAG;
-	//	}
-
 
 
 	if(MGPIO_u8GetPinValue(PORTB,0) == 0 && MGPIO_u8GetPinValue(PORTA,5) == 0)
@@ -399,35 +382,6 @@ u16 ShiftRegister_u16GetData(void)
 	return Data;
 }
 
-/*
-
-
-u16 ShiftRegister_u16GetData(void)
-{
-    u16 Data = 0;
-
-    // Load parallel data into the shift register
-    MGPIO_voidSetPinValue(PORTA, SH_LD_PIN, LOW);
-    delay_voidXms(1);  // Use minimal required delay
-    MGPIO_voidSetPinValue(PORTA, SH_LD_PIN, HIGH);
-
-    // Read serial data (LSB first)
-    for (u8 i = 0; i < 8; i++)
-    {
-        Data |= (MGPIO_u8GetPinValue(PORTA, QH_PIN) << i); // Read data and shift it accordingly
-
-        MGPIO_voidSetPinValue(PORTA, CLK_PIN, HIGH); // Pulse clock after reading
-        delay_voidXms(1);
-        MGPIO_voidSetPinValue(PORTA, CLK_PIN, LOW);
-    }
-
-    MGPIO_voidSetPinValue(PORTA, CLK_PIN, LOW); // Ensure clock is LOW after operation
-
-    return Data;
-}
- */
-
-
 
 void DataEntry_VoidWriteStringAndNumbers(u8 *Copy_u8StringToBeSent,u32 Copy_u32RealNumber)
 {
@@ -441,11 +395,6 @@ void DataEntry_VoidWriteStringAndNumbers(u8 *Copy_u8StringToBeSent,u32 Copy_u32R
 		USART1_VoidWriteCharacter(Copy_u8StringToBeSent[i]);
 		i++;
 	}
-	/*if (Copy_u32RealNumber == 0) {
-		USART1_VoidWriteCharacter('0');
-		return; // Early return to avoid further execution
-	}*/
-
 
 	u8 ArrIntegerValues[2]={0};
 

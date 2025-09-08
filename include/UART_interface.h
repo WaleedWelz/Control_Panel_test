@@ -41,6 +41,6 @@ void printBinary(u8 num) ;
 void printBinary16(u16 num);
 u8 USART1_ReceiveByteNonBlocking(u8 *data);
 u8* USART1_u8ReadString_NonBlocking();
-
+u8 USART1_u8ReadChar_NonBlocking();
 #endif /* UART_INTERFACE_H_ */
 

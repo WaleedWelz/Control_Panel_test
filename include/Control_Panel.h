@@ -43,7 +43,7 @@
 #define FV_NO_STATE   0
 #define NFV_FLAG   1
 #define MFV_FLAG   2
-#define WFV_FLAG   1
+#define WFV_FLAG   3
 
 
 
