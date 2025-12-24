@@ -43,7 +43,7 @@
 #define FV_NO_STATE   0
 #define NFV_FLAG   1
 #define MFV_FLAG   2
-#define WFV_FLAG   1
+#define WFV_FLAG   3
 
 
 
@@ -73,6 +73,9 @@
 #define SABOT              5
 #define HEAT               6
 #define HIGH_EXP           7
+#define NFOV			   8
+#define MFOV			   9
+#define WFOV               10
 
 #define ON                 0
 #define OFF				   1
@@ -87,7 +90,11 @@ enum Status
 	Hep,
 	Sabot,
 	Heat,
-	High_Exp
+	High_Exp,
+	Nfov,
+	Mfov,
+	Wfov,
+	NOM
 
 };
 
